@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RabbitAgency｜こまどアバターお写真デートRPイベント</title>
+<meta name="description" content="探偵事務所「RabbitAgency」は、こまどアバターの調査員（キャスト）と助手であるあなたが、“デート中のカップル”を装ってVRChatのワールドを探索し、依頼内容の調査・写真撮影を行うお写真デートロールプレイイベントです。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RabbitAgency">
+<meta property="og:title" content="Exploration And Capture RabbitAgency">
+<meta property="og:description" content="こまどアバターお写真デートRPイベント。調査員（キャスト）とふたり、恋人のフリをしてワールドを調査し、写真を撮ってくること。">
+<link rel="canonical" href="https://rabbitagency.hibimuda.com/">
+<meta property="og:url" content="https://rabbitagency.hibimuda.com/">
+<meta property="og:image" content="https://rabbitagency.hibimuda.com/assets/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="675">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@vrcRabbitAgency">
+<meta name="theme-color" content="#1a1114">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;700;800&family=Cinzel:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   RabbitAgency — 探偵事務所の机の上に置かれた「事件ファイル」
+   色はポスター準拠：古紙 / ワイン / 深紫 / 真鍮 / 机の闇
+   ========================================================== */
+:root{
+  --desk:#1a1114;
+  --desk-2:#26181f;
+  --paper:#e7d8b7;
+  --paper-2:#d9c69c;
+  --paper-light:#f2e8d2;
+  --paper-deep:#c4a97e;
+  --ink:#2b1d24;
+  --ink-soft:#5c4852;
+  --wine:#7a2a4e;
+  --wine-deep:#561a38;
+  --plum:#3d1a3b;
+  --brass:#b08a4c;
+  --brass-soft:#d6bd86;
+  --rose:#e7a9bf;
+  --pin:#b83a49;
+
+  --font-jp:"Shippori Mincho B1","Shippori Mincho","Yu Mincho","YuMincho","Hiragino Mincho ProN","Noto Serif JP",serif;
+  --font-latin:"Cinzel","Times New Roman",serif;
+  --font-type:"Special Elite","Courier New",Courier,monospace;
+
+  --noise-paper:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.32  0 0 0 0 0.21  0 0 0 0 0.12  0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --noise-desk:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 0.86  0 0 0 0 0.72  0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  --max:1120px;
+  --sheet-pad:clamp(28px,5vw,64px);
+  --topbar-h:64px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+body{
+  margin:0;
+  font-family:var(--font-jp);
+  font-size:16px;
+  line-height:1.9;
+  color:var(--paper);
+  background:var(--desk);
+  background-image:
+    radial-gradient(70% 45% at 22% 0%, rgba(214,170,110,.16), transparent 70%),
+    radial-gradient(60% 40% at 95% 100%, rgba(122,42,78,.18), transparent 70%),
+    linear-gradient(180deg, var(--desk-2) 0%, var(--desk) 40%, #140d10 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  font-feature-settings:"palt";
+}
+body::before{ /* 机の木目のざらつき */
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:var(--noise-desk);opacity:.28;mix-blend-mode:soft-light;
+}
+img{max-width:100%;display:block}
+a{color:var(--wine)}
+h1,h2,h3,h4{margin:0;font-weight:700;line-height:1.35}
+h1,h2{text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--paper);color:var(--ink);padding:8px 14px;z-index:100}
+.skip:focus{left:8px}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:50;
+  display:flex;align-items:center;gap:20px;
+  padding:0 clamp(14px,3vw,32px);
+  background:rgba(26,17,20,.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(176,138,76,.35);
+}
+.brand{
+  display:inline-flex;align-items:center;
+  transform:rotate(-1.2deg);
+  text-decoration:none;flex:none;
+}
+.brand img{height:40px;width:auto}
+.nav{margin-left:auto;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  color:var(--paper);text-decoration:none;font-size:.92rem;letter-spacing:.06em;
+  padding:8px 12px;border-radius:2px;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
+}
+.nav a:hover,.nav a.is-active{color:var(--brass-soft);border-bottom-color:var(--brass)}
+.nav a.nav-x{
+  margin-left:6px;border:1px solid rgba(176,138,76,.6);border-bottom-width:1px;
+  font-family:var(--font-type);font-size:.85rem;letter-spacing:.02em;
+}
+.nav a.nav-x:hover{background:rgba(176,138,76,.12);border-color:var(--brass-soft)}
+
+main{position:relative;z-index:1}
+
+/* ---------- Sheets (古紙) ---------- */
+.sheet{
+  position:relative;
+  color:var(--ink);
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(255,246,222,.55), transparent 60%),
+    radial-gradient(80% 60% at 100% 100%, rgba(120,80,40,.22), transparent 60%),
+    radial-gradient(70% 50% at 0% 100%, rgba(120,80,40,.16), transparent 60%),
+    var(--paper);
+  border-radius:3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 30px 50px -28px rgba(0,0,0,.85),
+    0 2px 6px rgba(0,0,0,.45);
+}
+.sheet::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background-image:var(--noise-paper);opacity:.5;mix-blend-mode:multiply;
+}
+.sheet::after{ /* 罫の内枠 */
+  content:"";position:absolute;inset:12px;pointer-events:none;
+  border:1px solid rgba(122,42,78,.22);
+}
+.sheet > *{position:relative;z-index:1}
+
+.pin{
+  position:absolute;z-index:3;width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 32%, #f08a97 0%, var(--pin) 45%, #6d1a27 100%);
+  box-shadow:0 4px 5px rgba(0,0,0,.55), inset 0 -2px 3px rgba(0,0,0,.35);
+}
+.pin::after{ /* 針の影 */
+  content:"";position:absolute;left:8px;top:14px;width:2px;height:14px;
+  background:linear-gradient(180deg, rgba(0,0,0,.45), transparent);
+  transform:rotate(-25deg);transform-origin:top;
+}
+
+.section{padding:clamp(36px,6vw,72px) clamp(14px,3vw,32px) 0}
+.section:last-of-type{padding-bottom:clamp(36px,6vw,72px)}
+.section .sheet{max-width:var(--max);margin:0 auto;padding:var(--sheet-pad)}
+
+/* ---------- Section header ---------- */
+.file-tag{
+  position:absolute;top:-16px;left:clamp(20px,4vw,48px);z-index:4;
+  display:inline-flex;align-items:baseline;gap:10px;
+  background:var(--paper-2);border:1px solid var(--brass);
+  padding:5px 16px 4px;border-radius:2px 2px 0 0;
+  box-shadow:0 -1px 0 rgba(255,255,255,.4) inset, 0 3px 6px rgba(0,0,0,.25);
+  transform:rotate(-.6deg);transform-origin:left bottom;
+}
+.file-tag .latin{font-family:var(--font-latin);font-size:.72rem;letter-spacing:.22em;color:var(--wine);font-weight:700}
+.file-tag .jp{font-size:.9rem;letter-spacing:.2em;color:var(--ink)}
+.sec-head{margin-bottom:clamp(24px,4vw,40px)}
+.sec-title{
+  font-size:clamp(1.9rem,4.2vw,2.8rem);font-weight:800;letter-spacing:.12em;
+  color:var(--plum);
+}
+.sec-title::after{
+  content:"";display:block;width:64px;height:2px;margin-top:14px;
+  background:linear-gradient(90deg, var(--wine), var(--brass));
+}
+.sec-lead{margin-top:16px;max-width:60em;color:var(--ink-soft);font-size:1.02rem}
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:calc(var(--topbar-h) + clamp(28px,5vw,64px)) clamp(14px,3vw,32px) 0;
+}
+.hero-grid{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(28px,4vw,56px);align-items:center;
+}
+.hero-sheet{padding:var(--sheet-pad)}
+.hero-sheet .pin{top:-8px;left:50%;margin-left:-9px}
+.hero-ribbon{
+  display:inline-block;font-size:.9rem;letter-spacing:.24em;color:var(--paper-light);
+  background:var(--plum);padding:6px 18px;border-radius:1px;
+  box-shadow:0 2px 0 var(--wine-deep);
+}
+.hero-logo{margin:18px 0 8px;width:min(100%,520px)}
+.hero-logo img{width:100%;height:auto;filter:drop-shadow(0 2px 0 rgba(255,255,255,.55))}
+.hero-title{
+  font-size:clamp(2.2rem,5.4vw,3.6rem);font-weight:800;letter-spacing:.1em;
+  color:var(--plum);margin-top:8px;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
+}
+.hero-sub{margin-top:14px;font-size:clamp(1rem,1.6vw,1.15rem);color:var(--ink);font-weight:600;letter-spacing:.04em}
+.hero-lead{margin-top:18px;max-width:34em;color:var(--ink-soft)}
+.flourish{display:block;width:180px;height:18px;margin:22px 0 0;color:var(--wine);opacity:.85}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;list-style:none;padding:0}
+.chip{
+  font-family:var(--font-type);font-size:.82rem;letter-spacing:.02em;
+  padding:4px 10px 3px;border:1px solid rgba(43,29,36,.45);border-radius:2px;
+  background:rgba(255,255,255,.22);color:var(--ink);
+}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+  font-weight:700;letter-spacing:.1em;font-size:.98rem;
+  padding:13px 24px;border-radius:2px;border:1.5px solid var(--wine);
+  transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.btn-primary{background:var(--wine);color:var(--paper-light);box-shadow:0 4px 0 var(--wine-deep), 0 8px 18px -8px rgba(0,0,0,.6)}
+.btn-primary:hover{background:var(--wine-deep);transform:translateY(1px);box-shadow:0 3px 0 var(--plum)}
+.btn-ghost{background:transparent;color:var(--wine)}
+.btn-ghost:hover{background:rgba(122,42,78,.1)}
+.btn .arrow{font-family:var(--font-type);font-weight:400}
+
+.hero-poster{position:relative;justify-self:center;width:min(100%,420px)}
+.hero-poster .pin{top:-6px;left:50%;margin-left:-9px}
+.hero-poster img{
+  width:100%;height:auto;border:10px solid var(--paper-light);
+  box-shadow:0 30px 50px -20px rgba(0,0,0,.9), 0 3px 8px rgba(0,0,0,.5);
+  transform:rotate(2.2deg);
+  transition:transform .35s ease;
+}
+.hero-poster:hover img{transform:rotate(0deg) scale(1.01)}
+.hero-poster .tape{
+  position:absolute;width:96px;height:26px;left:-22px;bottom:34px;z-index:3;
+  background:rgba(232,215,170,.75);transform:rotate(-38deg);
+  box-shadow:0 1px 2px rgba(0,0,0,.25);
+}
+.hero-poster .tape::after{content:"";position:absolute;inset:0;background-image:var(--noise-paper);opacity:.35}
+.stamp{
+  position:absolute;z-index:4;width:132px;height:132px;pointer-events:none;
+  mix-blend-mode:multiply;opacity:.82;
+}
+.hero-sheet .stamp{right:14px;bottom:8px;transform:rotate(-14deg)}
+.hero-note{
+  max-width:var(--max);margin:18px auto 0;
+  font-family:var(--font-type);font-size:.85rem;color:var(--brass-soft);letter-spacing:.04em;
+}
+
+/* ---------- About ---------- */
+.about-grid{
+  display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(24px,4vw,48px);align-items:start;
+}
+.story-wrap{display:flex;justify-content:flex-end;min-width:0}
+.story{
+  position:relative;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  font-feature-settings:normal; /* 縦書きでは palt を切る（字が重なるのを防ぐ） */
+  height:24rem;max-width:100%;overflow-x:auto;overflow-y:hidden;
+  font-size:1.04rem;line-height:2.15;letter-spacing:.08em;
+  padding:16px 8px 16px 20px;
+  border-right:3px double rgba(122,42,78,.45);
+  border-left:1px solid rgba(122,42,78,.25);
+  background:linear-gradient(90deg, rgba(255,255,255,.14), transparent 40%);
+}
+.story p{margin:0;margin-block-end:1.4em}
+.story p:last-child{margin-block-end:0}
+.story .story-title{
+  font-weight:800;font-size:1.3rem;letter-spacing:.3em;color:var(--plum);
+  margin-block-end:1.6em;padding-block-end:.4em;
+  border-block-end:1px solid var(--brass);
+}
+.story .story-sign{font-size:.92rem;color:var(--ink-soft);margin-block-start:.5em}
+.story em{font-style:normal;color:var(--wine);font-weight:700}
+
+.mission{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mission-item{
+  display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;
+  padding:16px 18px;background:rgba(255,255,255,.2);
+  border:1px solid rgba(122,42,78,.22);
+}
+.mission-item .glyph{
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  border:1.5px solid var(--brass);color:var(--wine);font-family:var(--font-latin);font-weight:700;font-size:.78rem;letter-spacing:.05em;
+  background:rgba(255,255,255,.3);
+}
+.mission-item h3{font-size:1.08rem;color:var(--plum);letter-spacing:.06em}
+.mission-item p{margin-top:4px;font-size:.95rem;color:var(--ink-soft)}
+
+.spec{margin-top:clamp(28px,4vw,44px);border-top:2px solid var(--plum);}
+.spec dl{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(20px,4vw,48px);margin:0;
+}
+.spec .row{
+  display:grid;grid-template-columns:8.5em 1fr;gap:14px;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid rgba(43,29,36,.18);
+}
+.spec dt{font-size:.85rem;letter-spacing:.18em;color:var(--wine);font-weight:700}
+.spec dd{margin:0;font-size:.98rem}
+.spec dd .type{font-family:var(--font-type);font-size:.92rem}
+.spec dd a{color:var(--wine);text-decoration-thickness:1px;text-underline-offset:3px}
+
+/* ---------- Flow / Timeline ---------- */
+.flow-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(24px,4vw,56px);align-items:start}
+.timeline{list-style:none;position:relative;display:grid;gap:0}
+.timeline li{
+  display:grid;grid-template-columns:7.6ch 1fr;gap:18px;align-items:start;
+  position:relative;padding:0 0 26px;
+}
+.timeline li::before{ /* 縦罫 */
+  content:"";position:absolute;left:calc(7.6ch + 18px + 9px);top:16px;bottom:-4px;width:1px;
+  background:rgba(122,42,78,.35);
+}
+.timeline li:last-child::before{display:none}
+.timeline time{
+  font-family:var(--font-type);font-size:1rem;letter-spacing:.02em;color:var(--wine);
+  font-variant-numeric:tabular-nums;padding-top:3px;white-space:nowrap;
+}
+.timeline .tl-body{position:relative;padding-left:34px}
+.timeline .tl-body::before{ /* 真鍮の鋲 */
+  content:"";position:absolute;left:3px;top:9px;width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--brass-soft), var(--brass) 60%, #7a5a2a);
+  box-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+.timeline li.is-main .tl-body::before{background:radial-gradient(circle at 35% 35%, #d98aa6, var(--wine) 60%, var(--wine-deep));width:17px;height:17px;left:1px;top:7px}
+.timeline h3{font-size:1.12rem;color:var(--plum);letter-spacing:.05em}
+.timeline .dur{font-family:var(--font-type);font-size:.8rem;color:var(--ink-soft);margin-left:8px;letter-spacing:.02em}
+.timeline p{margin-top:4px;font-size:.96rem;color:var(--ink-soft)}
+.timeline li.is-main p{color:var(--ink)}
+
+.aside-card{
+  padding:22px 24px;background:rgba(255,255,255,.22);border:1px solid rgba(122,42,78,.25);
+}
+.aside-card + .aside-card{margin-top:18px}
+.aside-card h3{font-size:1rem;letter-spacing:.18em;color:var(--wine);padding-bottom:8px;border-bottom:1px solid var(--brass);margin-bottom:12px}
+.aside-card p,.aside-card li{font-size:.94rem;color:var(--ink-soft)}
+.aside-card ul{list-style:none;display:grid;gap:8px}
+.aside-card li{padding-left:1.2em;text-indent:-1.2em}
+.aside-card li::before{content:"※";color:var(--wine);margin-right:.3em}
+
+.share{margin-top:6px}
+.share-bar{display:flex;height:14px;border:1px solid rgba(43,29,36,.4);background:rgba(255,255,255,.3);overflow:hidden}
+.share-bar span{display:block;height:100%}
+.share-bar .s1{width:16.7%;background:var(--brass)}
+.share-bar .s2{width:75%;background:var(--wine)}
+.share-bar .s3{width:8.3%;background:var(--plum)}
+.share-legend{display:grid;gap:6px;margin-top:12px;list-style:none}
+.share-legend li{display:flex;align-items:center;gap:10px;font-size:.92rem;padding:0;text-indent:0}
+.share-legend li::before{content:none}
+.share-legend i{width:12px;height:12px;flex:none;display:inline-block}
+.share-legend .n{margin-left:auto;font-family:var(--font-type);font-size:.9rem;font-variant-numeric:tabular-nums}
+
+/* ---------- Rules ---------- */
+.rules-note{
+  text-align:center;font-weight:700;letter-spacing:.08em;color:var(--plum);
+  padding:14px 18px;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);
+  margin-bottom:clamp(24px,4vw,40px);font-size:1.02rem;
+}
+.rules-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,3vw,32px)}
+.rule-col h3{
+  font-size:1.25rem;letter-spacing:.2em;color:var(--plum);
+  padding-bottom:10px;margin-bottom:14px;border-bottom:2px solid var(--plum);
+  display:flex;align-items:baseline;justify-content:space-between;
+}
+.rule-col h3 small{font-family:var(--font-latin);font-size:.66rem;letter-spacing:.2em;color:var(--wine);font-weight:700}
+.rule-col ul{list-style:none;display:grid;gap:10px}
+.rule-col li{position:relative;padding-left:1.7em;font-size:.96rem;line-height:1.75}
+.rule-col li::before{position:absolute;left:0;top:0;font-weight:700}
+.rule-col.ok li::before{content:"◆";color:var(--brass);font-size:.8em;top:.15em}
+.rule-col.ng li::before{content:"×";color:var(--wine);font-size:1.15em;top:-.05em;left:.15em}
+.rule-col.caution li::before{content:"※";color:var(--plum)}
+.rule-col li small{display:block;color:var(--ink-soft);font-size:.88rem}
+.rules-foot{margin-top:clamp(24px,4vw,36px);padding-top:16px;border-top:1px dashed rgba(122,42,78,.4);font-size:.94rem;color:var(--ink-soft);text-align:center}
+
+/* ---------- Join ---------- */
+.routes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,32px)}
+.route{
+  position:relative;padding:26px 26px 28px;background:rgba(255,255,255,.22);
+  border:1px solid rgba(122,42,78,.3);
+}
+.route::before{ /* 上端のリボン */
+  content:attr(data-route);position:absolute;top:-1px;left:22px;
+  font-family:var(--font-latin);font-size:.7rem;letter-spacing:.25em;font-weight:700;
+  background:var(--plum);color:var(--paper-light);padding:5px 12px 4px;
+}
+.route h3{font-size:1.35rem;letter-spacing:.14em;color:var(--plum);margin-top:18px}
+.route .route-when{font-family:var(--font-type);font-size:.85rem;color:var(--wine);margin-top:4px}
+.steps{list-style:none;counter-reset:step;margin-top:18px;display:grid;gap:14px}
+.steps li{
+  counter-increment:step;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;
+}
+.steps li::before{
+  content:counter(step);width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;font-family:var(--font-latin);font-weight:700;font-size:.85rem;
+  color:var(--paper-light);background:var(--wine);box-shadow:0 2px 0 var(--wine-deep);
+  margin-top:3px;
+}
+.steps li strong{display:block;font-size:1.02rem;color:var(--ink);letter-spacing:.04em}
+.steps li span{grid-column:2;display:block;font-size:.92rem;color:var(--ink-soft);margin-top:-4px}
+.steps a{color:var(--wine);text-underline-offset:3px;text-decoration-thickness:1px}
+.route-foot{margin-top:16px;padding-top:12px;border-top:1px dashed rgba(122,42,78,.4);font-size:.9rem;color:var(--ink-soft)}
+.join-notes{
+  margin-top:clamp(22px,4vw,36px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;
+}
+.join-note{
+  padding:16px 18px;border:1px solid rgba(176,138,76,.6);background:rgba(255,255,255,.16);font-size:.93rem;color:var(--ink-soft);
+}
+.join-note strong{display:block;color:var(--plum);letter-spacing:.06em;margin-bottom:4px;font-size:.98rem}
+.join-cta{margin-top:clamp(24px,4vw,36px);display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:center;text-align:center}
+.join-cta p{font-size:.95rem;color:var(--ink-soft)}
+.join .stamp{right:18px;top:-18px;transform:rotate(12deg);width:120px;height:120px}
+
+/* ---------- Cast ---------- */
+.cast-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,3vw,30px);
+  padding-top:10px;
+}
+.cast{
+  position:relative;
+  background:var(--paper-light);padding:9px 9px 12px;
+  box-shadow:0 18px 30px -18px rgba(0,0,0,.8), 0 2px 5px rgba(0,0,0,.35);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.cast:nth-child(4n+1){transform:rotate(-1.3deg)}
+.cast:nth-child(4n+2){transform:rotate(.9deg)}
+.cast:nth-child(4n+3){transform:rotate(-.6deg)}
+.cast:nth-child(4n+4){transform:rotate(1.2deg)}
+.cast:hover,.cast:focus-within{transform:rotate(0) translateY(-6px);box-shadow:0 30px 40px -20px rgba(0,0,0,.9), 0 4px 10px rgba(0,0,0,.4);z-index:2}
+.cast .pin{top:-9px;left:50%;margin-left:-9px;width:16px;height:16px}
+.cast-photo{
+  display:block;width:100%;padding:0;border:0;background:#2a1f24;cursor:zoom-in;
+  aspect-ratio:9/16;overflow:hidden;
+}
+.cast-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.cast:hover .cast-photo img{transform:scale(1.03)}
+.cast-meta{padding:12px 6px 2px;display:grid;gap:2px}
+.cast-meta .role{font-family:var(--font-latin);font-size:.62rem;letter-spacing:.3em;color:var(--brass);font-weight:700}
+.cast-meta h3{font-size:1.15rem;letter-spacing:.08em;color:var(--plum)}
+.cast-meta .romaji{font-family:var(--font-latin);font-size:.72rem;letter-spacing:.14em;color:var(--ink-soft)}
+.cast-meta a{
+  font-family:var(--font-type);font-size:.86rem;color:var(--wine);text-decoration:none;margin-top:6px;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.cast-meta a:hover{text-decoration:underline;text-underline-offset:3px}
+.cast-foot{margin-top:clamp(24px,4vw,36px);font-size:.92rem;color:var(--ink-soft);text-align:center}
+
+/* ---------- Manga (ルポマンガ) ---------- */
+.manga-empty{
+  display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:clamp(24px,4vw,48px);align-items:center;
+}
+.koma{ /* 空の4コマ枠 */
+  aspect-ratio:3/4;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;
+  padding:14px;background:var(--paper-light);border:1px solid rgba(43,29,36,.5);
+  box-shadow:0 18px 30px -18px rgba(0,0,0,.8);
+  position:relative;transform:rotate(-1.5deg);
+}
+.koma span{border:2px solid rgba(43,29,36,.65);background:repeating-linear-gradient(135deg, transparent 0 9px, rgba(43,29,36,.05) 9px 10px)}
+.koma span:nth-child(1){grid-column:1/-1}
+.koma .soon{
+  position:absolute;inset:auto 0 38% 0;margin:auto;text-align:center;
+  font-family:var(--font-latin);font-weight:700;letter-spacing:.32em;font-size:.9rem;color:var(--wine);
+  background:rgba(242,232,210,.92);padding:8px 0;border-top:1px solid var(--wine);border-bottom:1px solid var(--wine);
+  transform:rotate(-6deg);
+}
+.manga-copy h3{font-size:1.35rem;letter-spacing:.12em;color:var(--plum)}
+.manga-copy p{margin-top:12px;color:var(--ink-soft);max-width:34em}
+.manga-copy .how{
+  margin-top:18px;padding:12px 14px;background:rgba(255,255,255,.22);border-left:3px solid var(--brass);
+  font-size:.88rem;color:var(--ink-soft);
+}
+.manga-copy .how code{font-family:var(--font-type);color:var(--wine);font-size:.9em}
+.manga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:clamp(18px,3vw,30px)}
+.manga-card{
+  background:var(--paper-light);padding:9px 9px 12px;border:0;text-align:left;cursor:pointer;
+  box-shadow:0 18px 30px -18px rgba(0,0,0,.8), 0 2px 5px rgba(0,0,0,.35);
+  transition:transform .3s ease;display:block;width:100%;
+}
+.manga-card:hover{transform:translateY(-6px)}
+.manga-card img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#2a1f24}
+.manga-card .mc-meta{padding:10px 6px 0}
+.manga-card .mc-date{font-family:var(--font-type);font-size:.8rem;color:var(--wine)}
+.manga-card h3{font-size:1.05rem;color:var(--plum);letter-spacing:.06em;margin-top:2px}
+.manga-card .mc-pages{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+
+/* ---------- Footer ---------- */
+.footer{
+  position:relative;z-index:1;margin-top:clamp(36px,6vw,72px);
+  border-top:1px solid rgba(176,138,76,.35);
+  padding:clamp(28px,4vw,48px) clamp(14px,3vw,32px) clamp(28px,4vw,40px);
+  color:var(--brass-soft);
+}
+.footer-in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.footer .brand{transform:rotate(-1deg)}
+.footer .brand img{height:36px}
+.footer-copy{font-size:.9rem;line-height:1.8}
+.footer-copy .tag{font-family:var(--font-type);color:var(--paper)}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
+.footer-links a{color:var(--paper);text-decoration:none;font-size:.9rem;letter-spacing:.06em;border-bottom:1px solid rgba(176,138,76,.6);padding-bottom:2px}
+.footer-links a:hover{color:var(--brass-soft);border-bottom-color:var(--brass-soft)}
+.footer-legal{max-width:var(--max);margin:24px auto 0;font-size:.78rem;color:rgba(214,189,134,.65);font-family:var(--font-type);letter-spacing:.04em}
+
+/* ---------- Lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:90;background:rgba(14,8,10,.92);display:grid;place-items:center;padding:24px}
+.lb[hidden]{display:none}
+.lb-figure{margin:0;max-width:min(96vw,1100px);max-height:100%;display:grid;grid-template-rows:1fr auto;gap:12px;justify-items:center}
+.lb-figure img{max-width:100%;max-height:calc(100vh - 120px);object-fit:contain;border:8px solid var(--paper-light);box-shadow:0 30px 60px rgba(0,0,0,.8);background:#1a1114}
+.lb-cap{color:var(--paper);font-size:.95rem;letter-spacing:.06em;text-align:center}
+.lb-cap .type{font-family:var(--font-type);color:var(--brass-soft);margin-left:10px;font-size:.85rem}
+.lb-btn{
+  position:absolute;border:1px solid rgba(214,189,134,.6);background:rgba(26,17,20,.7);color:var(--paper);
+  width:46px;height:46px;border-radius:50%;cursor:pointer;display:grid;place-items:center;font-size:1.3rem;line-height:1;
+}
+.lb-btn:hover{background:var(--wine)}
+.lb-close{top:18px;right:18px}
+.lb-prev{left:14px;top:50%;transform:translateY(-50%)}
+.lb-next{right:14px;top:50%;transform:translateY(-50%)}
+.lb-btn[hidden]{display:none}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1000px){
+  .cast-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rules-grid{grid-template-columns:1fr}
+  .rule-col + .rule-col{padding-top:22px;border-top:1px dashed rgba(122,42,78,.35)}
+  .join-notes{grid-template-columns:1fr}
+  .flow-grid{grid-template-columns:1fr}
+}
+@media (max-width:900px){
+  .story{writing-mode:horizontal-tb;height:auto;overflow:visible;border-right:0;border-left:0;padding:10px 0 0;
+    border-top:3px double rgba(122,42,78,.45);background:none}
+  .story p{margin-block-end:1em}
+  .story .story-title{padding-block-end:.3em;margin-block-end:1em}
+}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-poster{width:min(100%,340px);margin-top:10px}
+  .routes{grid-template-columns:1fr}
+  .footer-in{grid-template-columns:1fr;justify-items:start}
+  .footer-links{justify-content:flex-start}
+  .spec dl{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  body{font-size:15px}
+  .cast-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mission{grid-template-columns:1fr}
+  .manga-empty{grid-template-columns:1fr}
+  .koma{max-width:280px}
+  .timeline li{grid-template-columns:6.4ch 1fr;gap:12px}
+  .timeline li::before{left:calc(6.4ch + 12px + 9px)}
+  .hero-sheet .stamp{width:96px;height:96px;right:6px;bottom:4px}
+  .spec .row{grid-template-columns:1fr;gap:2px}
+  .sheet::after{inset:8px}
+  .nav a{padding:8px 9px;font-size:.88rem}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#about">本文へスキップ</a>
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="RabbitAgency トップへ"><img src="RabbitAgencymonow.png" alt="Exploration And Capture RabbitAgency"></a>
+  <nav class="nav" aria-label="ページ内メニュー">
+    <a href="#about">概要</a>
+    <a href="#flow">当日の流れ</a>
+    <a href="#rules">ルール</a>
+    <a href="#join">参加方法</a>
+    <a href="#cast">キャスト</a>
+<!--    <a href="#manga">ルポマンガ</a> -->
+    <a class="nav-x" href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">@vrcRabbitAgency ↗</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div class="sheet hero-sheet">
+        <span class="pin" aria-hidden="true"></span>
+        <p class="hero-ribbon">こまどアバター お写真デートRPイベント</p>
+        <div class="hero-logo"><img src="RabbitAgencyLogo.png" alt="Exploration And Capture RabbitAgency" width="893" height="495"></div>
+        <h1 class="hero-title" id="hero-title">探偵助手、募集中。</h1>
+        <p class="hero-sub">調査員（キャスト）とふたり、恋人のフリをして——<br>ワールドを調査し、写真を撮ってくること。</p>
+        <svg class="flourish" viewBox="0 0 180 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M2 9h60M118 9h60"/><path d="M62 9c8-8 16-8 24 0-8 8-16 8-24 0z" fill="currentColor" stroke="none" opacity=".9"/>
+          <path d="M84 9c6-6 12-6 16 0-4 6-10 6-16 0z" fill="currentColor" stroke="none" opacity=".55" transform="translate(12 0)"/>
+          <circle cx="90" cy="9" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <p class="hero-lead">探偵事務所「RabbitAgency」は、こまどアバターの調査員（キャスト）と助手であるあなたが、“デート中のカップル”を装ってVRChatのワールドを探索し、依頼内容の調査・写真の撮影を行う、お写真デートロールプレイイベントです。</p>
+        <ul class="chips" aria-label="開催情報">
+          <li class="chip">不定期開催</li>
+          <li class="chip">23:00 – 24:00</li>
+          <li class="chip">PCVR限定</li>
+          <li class="chip">事前抽選 + 当日リクイン</li>
+          <li class="chip">#vrc_RabbitAgency</li>
+        </ul>
+        <div class="cta">
+          <a class="btn btn-primary" href="#join">参加方法を見る <span class="arrow">→</span></a>
+          <a class="btn btn-ghost" href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式Xをフォロー <span class="arrow">↗</span></a>
+        </div>
+        <!-- 受理印 -->
+        <svg class="stamp" viewBox="0 0 140 140" aria-hidden="true">
+          <defs><path id="stamp-arc" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+          <circle cx="70" cy="70" r="64" fill="none" stroke="#7a2a4e" stroke-width="3"/>
+          <circle cx="70" cy="70" r="58" fill="none" stroke="#7a2a4e" stroke-width="1"/>
+          <circle cx="70" cy="70" r="40" fill="none" stroke="#7a2a4e" stroke-width="1"/>
+          <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="2.2">
+            <textPath href="#stamp-arc" startOffset="0">RABBIT AGENCY · DETECTIVE OFFICE · VRCHAT ·</textPath>
+          </text>
+          <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="24" font-weight="800" fill="#7a2a4e" letter-spacing="4">受理</text>
+        </svg>
+      </div>
+
+      <figure class="hero-poster">
+        <span class="pin" aria-hidden="true"></span>
+        <span class="tape" aria-hidden="true"></span>
+        <img src="assets/poster.jpg" alt="探偵助手募集ポスター：業務内容は調査補助。隠密調査のため、調査員と助手は恋人のフリをしながら調査すること。" width="900" height="1200" fetchpriority="high">
+      </figure>
+    </div>
+    <p class="hero-note">※ 開催日程・応募フォームは毎月、公式X（@vrcRabbitAgency）で告知します。</p>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></p>
+      <header class="sec-head">
+        <h2 class="sec-title" id="about-title">イベント概要</h2>
+        <p class="sec-lead">VRC_RabbitAgencyは、VRChatの「偽装カップルお写真デート」ロールプレイイベントです。</p>
+      </header>
+
+      <div class="about-grid">
+        <div class="story-wrap">
+          <div class="story" aria-label="世界観">
+            <p class="story-title">STORY</p>
+            <p>探偵事務所「RabbitAgency」は、VRChat内での依頼を受けて様々な調査を行う探偵事務所。今日もまた新しい調査依頼が事務所に舞い込んでくる。</p>
+            <p>しかし、事件の調査には危険が付きもの。危険を回避する為には、調査対象にバレない様に調査を遂行しなければならない。</p>
+            <p>そこで、調査員である<em>【キャスト】</em>は、怪しまれないように臨時助手である<em>【お客さん】</em>と「デートしているカップル」を装って調査を行うことにした。</p>
+            <p><em>【キャスト】</em>と<em>【お客さん】</em>に与えられた任務は、ワールド内を調査して、時間内に<em>【撮影ターゲット】</em>を探し出して写真を撮ってくる事。</p>
+            <p>"デート"と"秘密任務"どちらもこなせてこそ、一流の調査員だ。健闘を祈る。</p>
+            <p class="story-sign">—— 探偵事務所 RabbitAgency</p>
+          </div>
+        </div>
+
+        <div class="mission">
+          <div class="mission-item">
+            <span class="glyph" aria-hidden="true">01</span>
+            <div><h3>助手として事務所に集合</h3><p>まずは探偵事務所で、本日のブリーフィングを行います。その日調査するワールドと「任務の内容」をお伝えします。</p></div>
+          </div>
+          <div class="mission-item">
+            <span class="glyph" aria-hidden="true">02</span>
+            <div><h3>調査員とふたりでワールドへ</h3><p>キャストがインスタンスを開き、ふたりきりで出発。デートするか、探索するか、写真を撮るかは、キャストにおまかせ。</p></div>
+          </div>
+          <div class="mission-item">
+            <span class="glyph" aria-hidden="true">03</span>
+            <div><h3>撮影ターゲットを写真に収める</h3><p>二人でデートをしつつ、撮影ターゲットを探してください。見つからなくても調査失敗のペナルティはありません。</p></div>
+          </div>
+          <div class="mission-item">
+            <span class="glyph" aria-hidden="true">04</span>
+            <div><h3>事務所に戻って報告・アフター</h3><p>時間になったら事務所へ帰還し、写真を提出。その後はアフター会場で、提出された写真を眺めながら雑談。</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <dl>
+          <div class="row"><dt>イベント名</dt><dd>Exploration And Capture RabbitAgency<br><span class="type">(vrc_RabbitAgency)</span></dd></div>
+          <div class="row"><dt>形式</dt><dd>リクイン制（事前抽選＋当日リクイン）／キャストとふたりでのワールド探索</dd></div>
+          <div class="row"><dt>開催</dt><dd>月１回程度、不定期開催。日程は公式Xで告知します</dd></div>
+          <div class="row"><dt>時間</dt><dd><span class="type">23:00 – 24:00</span>（22:55〜受付、アフター後 24:20頃解散）</dd></div>
+          <div class="row"><dt>対象</dt><dd>PCVRの方／トラストランク「USER」以上／日本語でコミュニケーションが取れる方</dd></div>
+          <div class="row"><dt>キャスト</dt><dd>指名は不可、ランダムになります。</dd></div>
+          <div class="row"><dt>公式X</dt><dd><a href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">@vrcRabbitAgency</a></dd></div>
+          <div class="row"><dt>ハッシュタグ</dt><dd><span class="type">#vrc_RabbitAgency</span></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FLOW ================= -->
+  <section class="section" id="flow" aria-labelledby="flow-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">SCHEDULE</span><span class="jp">行動記録</span></p>
+      <header class="sec-head">
+        <h2 class="sec-title" id="flow-title">当日の流れ</h2>
+        <p class="sec-lead">集合からアフターまで、約1時間半。時刻は目安です。</p>
+      </header>
+
+      <div class="flow-grid">
+        <ol class="timeline">
+          <li>
+            <time datetime="22:50">22:50</time>
+            <div class="tl-body"><h3>事前当選者リクイン</h3><p>事前抽選に当選した方は、この時間にリクインをお送りください。</p></div>
+          </li>
+          <li>
+            <time datetime="22:55">22:55</time>
+            <div class="tl-body"><h3>当日リクイン受付 <span class="dur">〜22:58</span></h3><p>当日枠の方は「Fozy_event」へリクイン。事務所に着いたら、奥の部屋でお待ちください。</p></div>
+          </li>
+          <li>
+            <time datetime="23:00">23:00</time>
+            <div class="tl-body"><h3>ブリーフィング <span class="dur">約10分</span></h3><p>お客様が集まり次第開始。所長挨拶とイベント概要の動画のあと、インスタンスリーダーとキャスト1名の寸劇で、その日のワールドと探索目標（お題）の地点を発表します。</p></div>
+          </li>
+          <li class="is-main">
+            <time datetime="23:10">23:10</time>
+            <div class="tl-body"><h3>調査開始 — ワールド探索・写真撮影 <span class="dur">約45分</span></h3><p>キャストがインスタンスを開き、ふたりで移動。いちゃいちゃデートをするか、探索するか、写真を撮るかはキャスト次第。「本部から連絡があって調査対象が変わった」なんてRPが挟まることも。</p></div>
+          </li>
+          <li>
+            <time datetime="23:55">23:55</time>
+            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約15分</span></h3><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所奥で２０分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
+          </li>
+          <li>
+            <time datetime="00:20">24:20</time>
+            <div class="tl-body"><h3>解散</h3><p>ご参加ありがとうございました。"#vrc_RabbitAgency"にて、感想をポストしていただけるととっても嬉しいです。</p></div>
+          </li>
+        </ol>
+
+        <div>
+          <div class="aside-card share">
+            <h3>調査時間の内訳</h3>
+            <div class="share-bar" role="img" aria-label="集合・ブリーフィング10分、ワールド探索・写真45分、再集合5分の計60分">
+              <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+            </div>
+            <ul class="share-legend">
+              <li><i style="background:var(--brass)"></i>集合〜ブリーフィング<span class="n">10分</span></li>
+              <li><i style="background:var(--wine)"></i>ワールド探索・写真<span class="n">45分</span></li>
+              <li><i style="background:var(--plum)"></i>再集合<span class="n">5分</span></li>
+            </ul>
+          </div>
+          <div class="aside-card">
+            <h3>調査中の心得</h3>
+            <ul>
+              <li>途中でエラー落ちしてしまった場合は、再度リクインを送って事務所で合流し、ワールドへ戻ってください。</li>
+              <li>提出された写真は、公式Xで公開される場合がございます。ご了承ください。</li>
+              <li>集合写真の撮影はありません。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RULES ================= -->
+  <section class="section" id="rules" aria-labelledby="rules-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">RULE</span><span class="jp">事務所規則</span></p>
+      <header class="sec-head">
+        <h2 class="sec-title" id="rules-title">イベントルール</h2>
+        <p class="sec-lead">安心して調査に集中していただくためのお約束です。ご参加前に必ずご確認ください。</p>
+      </header>
+
+      <p class="rules-note">イベント入場後は、必ずスタッフの案内・指示に従ってください。</p>
+
+      <div class="rules-grid">
+        <div class="rule-col ok">
+          <h3>参加条件 <small>REQUIREMENTS</small></h3>
+          <ul>
+            <li>デバイスはPCVRの方のみ<small>（デスクトップは不可となります）</small></li>
+            <li>トラストランク「USER」以上の方のみ</li>
+            <li>RPの都合上、人型アバターでの参加をお願いいたします</li>
+            <li>日本語でのコミュニケーションが取れる方<small>（無言勢の方はチャットボックスが使用できれば大丈夫です。QVペンは無い場合がございます）</small></li>
+          </ul>
+        </div>
+        <div class="rule-col ng">
+          <h3>禁止事項 <small>PROHIBITED</small></h3>
+          <ul>
+            <li>許可のない配信、録画行為</li>
+            <li>キャストへのフレンド申請</li>
+            <li>キャストへのお客様からの過度な接触</li>
+            <li>キャストが拒否したサービスを強要する行為</li>
+            <li>NSFWに類するアバターの使用、行為</li>
+            <li>違法アバター、極端に負荷の高いアバター、大きな音・光を発生するアバターの使用</li>
+            <li>その他キャストが嫌がる行為、キャストへの付きまとい</li>
+          </ul>
+        </div>
+        <div class="rule-col caution">
+          <h3>注意事項 <small>NOTICE</small></h3>
+          <ul>
+            <li>イベント営業中のロールプレイの度合い、デートの内容は、キャストによって異なります</li>
+            <li>キャストの指名はできません（ランダムです）</li>
+            <li>事前抽選への応募は、公式Xのフォローと該当ポストのリポストが必要です</li>
+            <li>上記参加条件、禁止事項をお守りいただけない場合、その場でご退場いただくことがございます</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="rules-foot">禁止事項に関しては、キャスト・スタッフの指示・判断に従ってください。以上をお守りいただける方のみ、ご参加をお願いいたします。</p>
+    </div>
+  </section>
+
+  <!-- ================= JOIN ================= -->
+  <section class="section join" id="join" aria-labelledby="join-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">HOW TO JOIN</span><span class="jp">助手応募要項</span></p>
+      <svg class="stamp" viewBox="0 0 140 140" aria-hidden="true">
+        <defs><path id="stamp-arc2" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
+        <circle cx="70" cy="70" r="64" fill="none" stroke="#7a2a4e" stroke-width="3"/>
+        <circle cx="70" cy="70" r="58" fill="none" stroke="#7a2a4e" stroke-width="1"/>
+        <circle cx="70" cy="70" r="40" fill="none" stroke="#7a2a4e" stroke-width="1"/>
+        <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="2.2">
+          <textPath href="#stamp-arc2" startOffset="0">RABBIT AGENCY · TEMPORARY ASSISTANT ·</textPath>
+        </text>
+        <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="22" font-weight="800" fill="#7a2a4e" letter-spacing="3">募集</text>
+      </svg>
+      <header class="sec-head">
+        <h2 class="sec-title" id="join-title">参加方法</h2>
+        <p class="sec-lead">参加方法は2つ。もし事前抽選に外れてしまった方も、当日リクイン枠からご参加いただけます。</p>
+      </header>
+
+      <div class="routes">
+        <article class="route" data-route="ROUTE A">
+          <h3>事前抽選</h3>
+          <p class="route-when">開催の約2週間前〜1週間前に公式Xにて受付</p>
+          <ol class="steps">
+            <li><strong>公式Xをフォロー</strong><span><a href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">@vrcRabbitAgency</a> をフォローします。</span></li>
+            <li><strong>告知ポストをリポスト</strong><span>「事前抽選のお知らせ」ポストをリポストします。</span></li>
+            <li><strong>応募フォームから応募</strong><span>告知ポストの返信欄にある応募フォームから応募します。注意事項をよく読んでご記入ください。</span></li>
+            <li><strong>抽選結果を待つ</strong><span>当選者の方には、受付終了後にDMでご連絡します。</span></li>
+          </ol>
+          <p class="route-foot">※ リポストのみでは応募完了になりません。必ず応募フォームからご応募ください。</p>
+        </article>
+
+        <article class="route" data-route="ROUTE B">
+          <h3>当日リクイン</h3>
+          <p class="route-when">当日 22:55 – 22:58 受付</p>
+          <ol class="steps">
+            <li><strong>当日夕方までにフレンド申請</strong><span>リクイン先アカウント「<a href="https://vrchat.com/home/user/usr_b2ee0dab-cbd1-4791-b475-f875ac3dca9f" target="_blank" rel="noopener">Fozy_event</a>」へ、当日夕方までにフレンド申請をお願いします。</span></li>
+            <li><strong>22:55〜22:58 にリクイン</strong><span>受付時間内に「Fozy_event」へリクエストインバイトを送ります。</span></li>
+            <li><strong>抽選</strong><span>当選者の方には、23:59までにインバイトをお送りします。</span></li>
+          </ol>
+          <p class="route-foot">※ 事前抽選に外れてしまった方も、もちろんご応募いただけます。</p>
+        </article>
+      </div>
+
+      <div class="join-notes">
+        <div class="join-note"><strong>開催日程は公式Xをご確認下さい。</strong>不定期開催のため、営業日・受付期間は毎月公式Xでお知らせします。</div>
+        <div class="join-note"><strong>キャスト指名不可</strong>調査員の指名はできません。どのキャストと組むかは、当日のお楽しみ。</div>
+        <div class="join-note"><strong>注意事項</strong>事前に、イベントルールをよく読んでご来場ください。</div>
+      </div>
+
+      <div class="join-cta">
+        <p>次回の営業日と応募フォームは、公式Xの最新ポストをご確認ください。</p>
+        <a class="btn btn-primary" href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式Xで告知を見る <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CAST ================= -->
+  <section class="section" id="cast" aria-labelledby="cast-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">INVESTIGATORS</span><span class="jp">調査員名簿</span></p>
+      <header class="sec-head">
+        <h2 class="sec-title" id="cast-title">キャスト紹介</h2>
+        <p class="sec-lead">探偵事務所 RabbitAgency に所属する、こまどアバターの調査員たち。写真をクリックすると大きく表示します。</p>
+      </header>
+
+      <!--
+        キャストの追加方法：
+        下の <article class="cast"> … </article> をコピーして、
+        画像パス（CastPhotos/○○.jpg）、名前、ローマ字、Xのアカウントを書き換えてください。
+      -->
+      <div class="cast-grid">
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/ruri_RAn.jpg" data-caption="るり" aria-label="るりの写真を拡大"><img src="CastPhotos/ruri_RAn.jpg" alt="調査員 るり" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>るり</h3><span class="romaji">LULI</span><a href="https://x.com/Luli_vrc" target="_blank" rel="noopener">@Luli_vrc ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/reirin_RAn.jpg" data-caption="慕狼レイリン" aria-label="慕狼レイリンの写真を拡大"><img src="CastPhotos/reirin_RAn.jpg" alt="調査員 慕狼レイリン" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>慕狼レイリン</h3><span class="romaji">SINOGAMI-RAYLIN</span><a href="https://x.com/RaylinVrc" target="_blank" rel="noopener">@RaylinVrc ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/picrin_RAn.jpg" data-caption="ぴくりん" aria-label="ぴくりんの写真を拡大"><img src="CastPhotos/picrin_RAn.jpg" alt="調査員 ぴくりん" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>ぴくりん</h3><span class="romaji">PICRIN</span><a href="https://x.com/_picric" target="_blank" rel="noopener">@_picric ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/daken_RAn.jpg" data-caption="Swift-Daken" aria-label="Swift-Dakenの写真を拡大"><img src="CastPhotos/daken_RAn.jpg" alt="調査員 Swift-Daken" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>Swift-Daken</h3><span class="romaji">SWIFT-DAKEN</span><a href="https://x.com/Swift_Daken" target="_blank" rel="noopener">@Swift_Daken ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/ametori_RAn.jpg" data-caption="あめとり" aria-label="あめとりの写真を拡大"><img src="CastPhotos/ametori_RAn.jpg" alt="調査員 あめとり" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>あめとり</h3><span class="romaji">AMETORI</span><a href="https://x.com/ametori11_vrc" target="_blank" rel="noopener">@ametori11_vrc ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/izacy_RAn.jpg" data-caption="いざし～" aria-label="いざし～の写真を拡大"><img src="CastPhotos/izacy_RAn.jpg" alt="調査員 いざし～" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>いざし～</h3><span class="romaji">IZACY</span><a href="https://x.com/izaVRCy" target="_blank" rel="noopener">@izaVRCy ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/koti2_RAn.jpg" data-caption="珈白こち" aria-label="珈白こちの写真を拡大"><img src="CastPhotos/koti2_RAn.jpg" alt="調査員 珈白こち" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>珈白こち</h3><span class="romaji">KASHIRO-KOCHI</span><a href="https://x.com/koch1_vrc" target="_blank" rel="noopener">@koch1_vrc ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/chiwawa2_RAn.jpg" data-caption="チワワ七世" aria-label="チワワ七世の写真を拡大"><img src="CastPhotos/chiwawa2_RAn.jpg" alt="調査員 チワワ七世" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>チワワ七世</h3><span class="romaji">CHIWAWA-7SEI</span><a href="https://x.com/chiwawa7th" target="_blank" rel="noopener">@chiwawa7th ↗</a></div>
+        </article>
+      </div>
+
+      <p class="cast-foot">調査員の指名はできません。出欠に関しては当日のXにて発表いたします。</p>
+    </div>
+  </section>
+
+
+  <!-- ================= MANGA（ルポマンガ） =================
+  <section class="section" id="manga" aria-labelledby="manga-title">
+    <div class="sheet">
+      <p class="file-tag"><span class="latin">REPORT</span><span class="jp">調査報告書</span></p>
+      <header class="sec-head">
+        <h2 class="sec-title" id="manga-title">ルポマンガ</h2>
+        <p class="sec-lead">営業日の出来事を、ルポマンガとしてここに綴っていきます。</p>
+      </header>
+
+     （ 掲載作品は index.html 末尾の <script> 内 MANGA_REPORTS に追記すると、ここに自動で並びます）
+      <div class="manga-grid" id="manga-grid" hidden></div>
+
+      <div class="manga-empty" id="manga-empty">
+        <div class="koma" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <p class="soon">COMING SOON</p>
+        </div>
+        <div class="manga-copy">
+          <h3>調査報告書は、ただいま作成中。</h3>
+          <p>調査員と助手のあいだで何が起きたのか——事件の顛末は、後日ルポマンガとしてこのページに掲載予定です。公開のお知らせは公式Xで行います。</p>
+          <p class="how">管理メモ：<code>manga/</code> フォルダに画像を置き、<code>index.html</code> 末尾の <code>MANGA_REPORTS</code> に1話分を追記すると、この場所にサムネイル一覧と閲覧ビューアが表示されます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  -->
+
+</main>
+
+<footer class="footer">
+  <div class="footer-in">
+    <a class="brand" href="#top" aria-label="RabbitAgency トップへ"><img src="RabbitAgencymonow.png" alt="Exploration And Capture RabbitAgency"></a>
+    <p class="footer-copy">探偵事務所「vrc_RabbitAgency」は、VRChat内で開催されるお写真デートRPイベントです。<br><span class="tag">#vrc_RabbitAgency</span></p>
+    <nav class="footer-links" aria-label="フッターメニュー">
+      <a href="#about">概要</a>
+      <a href="#rules">ルール</a>
+      <a href="#join">参加方法</a>
+      <a href="#cast">キャスト</a>
+      <a href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式X ↗</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ライトボックス（キャスト写真・ルポマンガ閲覧用） -->
+<div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="画像ビューア">
+  <button class="lb-btn lb-close" type="button" aria-label="閉じる">×</button>
+  <button class="lb-btn lb-prev" type="button" aria-label="前のページ" hidden>‹</button>
+  <figure class="lb-figure">
+    <img id="lb-img" src="" alt="">
+    <figcaption class="lb-cap"><span id="lb-title"></span><span class="type" id="lb-page"></span></figcaption>
+  </figure>
+  <button class="lb-btn lb-next" type="button" aria-label="次のページ" hidden>›</button>
+</div>
+
+<script>
+/* ==========================================================
+   ルポマンガの掲載データ
+   1話分を以下の形式で追加してください（画像は manga/ フォルダに置く想定）。
+   例:
+   {
+     title: "第一回営業 調査報告",
+     date:  "2026.08.27",
+     cover: "manga/ep01/cover.jpg",          // 一覧に表示するサムネイル
+     pages: ["manga/ep01/01.jpg", "manga/ep01/02.jpg", "manga/ep01/03.jpg"]
+   }
+   ========================================================== */
+const MANGA_REPORTS = [
+];
+
+(function(){
+  const $ = (s, el=document) => el.querySelector(s);
+  const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+  /* ---- Lightbox ---- */
+  const lb = $('#lightbox'), lbImg = $('#lb-img'), lbTitle = $('#lb-title'), lbPage = $('#lb-page');
+  const btnPrev = $('.lb-prev', lb), btnNext = $('.lb-next', lb), btnClose = $('.lb-close', lb);
+  let gallery = [], index = 0, lastFocus = null;
+
+  function render(){
+    const item = gallery[index];
+    lbImg.src = item.src; lbImg.alt = item.alt || '';
+    lbTitle.textContent = item.title || '';
+    lbPage.textContent = gallery.length > 1 ? `${index+1} / ${gallery.length}` : '';
+    btnPrev.hidden = btnNext.hidden = gallery.length <= 1;
+  }
+  function open(items, start=0){
+    gallery = items; index = start; lastFocus = document.activeElement;
+    render(); lb.hidden = false; document.body.style.overflow = 'hidden'; btnClose.focus();
+  }
+  function close(){
+    lb.hidden = true; lbImg.src = ''; document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  const step = d => { index = (index + d + gallery.length) % gallery.length; render(); };
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', () => step(-1));
+  btnNext.addEventListener('click', () => step(1));
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft' && gallery.length > 1) step(-1);
+    if (e.key === 'ArrowRight' && gallery.length > 1) step(1);
+  });
+
+  /* キャスト写真 */
+  $$('.cast-photo').forEach(btn => {
+    btn.addEventListener('click', () => open([{ src: btn.dataset.full, title: btn.dataset.caption, alt: btn.dataset.caption }]));
+  });
+
+  /* ---- ルポマンガ一覧 ---- */
+  const grid = $('#manga-grid'), empty = $('#manga-empty');
+  if (MANGA_REPORTS.length){
+    MANGA_REPORTS.forEach(rep => {
+      const card = document.createElement('button');
+      card.type = 'button'; card.className = 'manga-card';
+      card.innerHTML = `<img src="${rep.cover || rep.pages[0]}" alt="" loading="lazy">
+        <div class="mc-meta"><div class="mc-date">${rep.date || ''}</div><h3></h3><div class="mc-pages">${rep.pages.length}ページ</div></div>`;
+      card.querySelector('h3').textContent = rep.title;
+      card.addEventListener('click', () => open(rep.pages.map((p,i) => ({ src: p, title: rep.title, alt: `${rep.title} ${i+1}ページ目` }))));
+      grid.appendChild(card);
+    });
+    grid.hidden = false; empty.hidden = true;
+  }
+
+  /* ---- ナビの現在地 ---- */
+  const links = $$('.nav a[href^="#"]');
+  const targets = links.map(a => $(a.getAttribute('href'))).filter(Boolean);
+  if ('IntersectionObserver' in window && targets.length){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    targets.forEach(t => io.observe(t));
+  }
+})();
+</script>
+</body>
+</html>
