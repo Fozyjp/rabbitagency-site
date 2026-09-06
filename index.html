@@ -19,6 +19,8 @@
 <meta name="theme-color" content="#1a1114">
 <link rel="icon" href="assets/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" as="image" href="assets/desk.jpg">
+<link rel="preload" as="image" href="assets/paper.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;700;800&family=Cinzel:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
@@ -68,19 +70,27 @@ body{
   font-size:16px;
   line-height:1.9;
   color:var(--paper);
-  background:var(--desk);
-  background-image:
-    radial-gradient(70% 45% at 22% 0%, rgba(214,170,110,.16), transparent 70%),
-    radial-gradient(60% 40% at 95% 100%, rgba(122,42,78,.18), transparent 70%),
-    linear-gradient(180deg, var(--desk-2) 0%, var(--desk) 40%, #140d10 100%);
-  background-attachment:fixed;
+  background:var(--desk);   /* 天板画像が来るまでの下地 */
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
   font-feature-settings:"palt";
 }
-body::before{ /* 机の木目のざらつき */
+/* ---------- 机の天板 ----------
+   画面に貼り付いた一枚板。書類（各セクション）はこの上に積まれていく。
+   position:fixed の擬似要素にしているので、iOS でも背景がずれない。
+   重ね順は上から：卓上ランプの光 → 周辺の暗がり → 奥の赤み → ざらつき → 木目写真 */
+body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:var(--noise-desk);opacity:.28;mix-blend-mode:soft-light;
+  background-color:var(--desk);
+  background-image:
+    radial-gradient(72% 46% at 24% -8%, rgba(255,216,152,.16), transparent 68%),
+    radial-gradient(130% 100% at 50% 44%, transparent 46%, rgba(8,4,6,.62) 100%),
+    radial-gradient(62% 46% at 97% 106%, rgba(122,42,78,.26), transparent 72%),
+    url("assets/desk.jpg");
+  background-size:cover, cover, cover, cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-blend-mode:screen, normal, normal, normal;
 }
 img{max-width:100%;display:block}
 a{color:var(--wine)}
@@ -128,21 +138,26 @@ main{position:relative;z-index:1}
 .sheet{
   position:relative;
   color:var(--ink);
-  background:
-    radial-gradient(120% 70% at 50% -10%, rgba(255,246,222,.55), transparent 60%),
-    radial-gradient(80% 60% at 100% 100%, rgba(120,80,40,.22), transparent 60%),
-    radial-gradient(70% 50% at 0% 100%, rgba(120,80,40,.16), transparent 60%),
-    var(--paper);
-  border-radius:3px;
+  background:var(--paper);                     /* テクスチャが来るまでの下地 */
+  border-radius:2px;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.35),
-    0 30px 50px -28px rgba(0,0,0,.85),
-    0 2px 6px rgba(0,0,0,.45);
+    inset 0  1px 0 rgba(255,252,240,.45),      /* 断裁面（上）*/
+    inset 0 -1px 0 rgba(92,62,36,.30),         /* 断裁面（下）*/
+    inset 0 0 26px rgba(122,84,44,.12),        /* 縁の手ずれ */
+    0 1px 2px rgba(0,0,0,.55),                 /* 机に接している影 */
+    0 6px 12px -6px rgba(0,0,0,.50),
+    0 30px 50px -28px rgba(0,0,0,.85);
 }
-.sheet::before{
+.sheet::before{ /* 古紙のテクスチャ。1 枚をその書類の大きさに合わせて使う */
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background-image:var(--noise-paper);opacity:.5;mix-blend-mode:multiply;
+  background-image:url("assets/paper.jpg");
+  background-size:100% 100%;
+  background-repeat:no-repeat;
 }
+/* 同じテクスチャの使い回しに見えないよう、書類ごとに向きを変える */
+main > section:nth-of-type(2n) .sheet::before{transform:scaleX(-1)}
+main > section:nth-of-type(3n) .sheet::before{transform:scaleY(-1)}
+main > section:nth-of-type(6n) .sheet::before{transform:scale(-1,-1)}
 .sheet::after{ /* 罫の内枠 */
   content:"";position:absolute;inset:12px;pointer-events:none;
   border:1px solid rgba(122,42,78,.22);
@@ -160,9 +175,51 @@ main{position:relative;z-index:1}
   transform:rotate(-25deg);transform-origin:top;
 }
 
-.section{padding:clamp(36px,6vw,72px) clamp(14px,3vw,32px) 0}
-.section:last-of-type{padding-bottom:clamp(36px,6vw,72px)}
+.section{margin-top:clamp(36px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
+.section:last-of-type{margin-bottom:clamp(36px,6vw,72px)}
 .section .sheet{max-width:var(--max);margin:0 auto;padding:var(--sheet-pad)}
+
+/* ---------- 書類スタック（スクロールで紙が積み重なる演出） ----------
+   main 直下の各 section を position:sticky にし、次の書類が上に重なっていく。
+   JS が各書類の止まる位置（style.top）と、上に何枚重なったか（--d）を更新する。
+   --d に応じて下の書類は少し縮み・暗くなり、机の上の「山」に見える。
+   短い書類は画面上部で止まり、画面より長い書類は読み終わった位置（下端）で止まる。
+
+   書類ごとに「その紙のクセ」＝ --tilt（傾き）を持たせ、一枚の紙の一生を通して同じ軸で扱う：
+     下から差し込まれる間 … --q が 1→0。--tilt を強めた角度から、まっすぐへ（読む前に必ず 0 になる）
+     読んでいる間         … まっすぐ・明るいまま
+     下に潜っていく間     … --d が 0→ 増加。--tilt の角度・横ずれに落ち着き、少し縮んで暗くなる */
+main > section{--d:0;--q:0}
+.has-stack main > section{position:sticky;top:0;z-index:1;isolation:isolate;transform-origin:50% 0}
+.has-stack main > section.is-under{ /* 上に別の書類が重なっている間だけ変形（スマホの負荷を抑える） */
+  transform:
+    translateX(calc(var(--shift,0px) * min(var(--d),1)))
+    rotate(calc(var(--tilt,0deg) * min(var(--d),1)))
+    scale(calc(1 - min(var(--d),3) * .035));
+  filter:brightness(calc(1 - min(var(--d),3) * .09));
+}
+/* 差し込み中の紙：画面下から現れる上端を支点に、斜めから入ってきて読み始める位置までにまっすぐ着地する。
+   支点を上端に置くことで、画面に出ている部分の振れ幅だけが効き、長い書類でも横に暴れない。
+   はみ出しは overflow-x:clip で画面内に収める（縦は visible のままなのでファイルタブは欠けない）。 */
+.has-stack main > section{overflow-x:clip}
+.has-stack main > section > .sheet{transform-origin:50% 0}
+.has-stack main > section.is-entering > .sheet{
+  transform:
+    translateY(calc(var(--q) * 24px))
+    rotate(calc(var(--tilt-in,0deg) * var(--q)))
+    scale(calc(1 - var(--q) * .02));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 calc(30px + var(--q) * 26px) calc(50px + var(--q) * 34px) -28px rgba(0,0,0,.85),
+    0 calc(2px + var(--q) * 6px) calc(6px + var(--q) * 10px) rgba(0,0,0,.45);
+}
+/* ページ内リンクの飛び先を測るあいだだけ、貼り付きを外して本来の位置に戻す（描画前に戻すので見えない） */
+.measure-static main > section{position:static!important;transform:none!important}
+.measure-static main > section > .sheet{transform:none!important}
+@media (prefers-reduced-motion:reduce){
+  .has-stack main > section,.has-stack main > section.is-under{position:static;transform:none;filter:none}
+  .has-stack main > section.is-entering > .sheet{transform:none}
+}
 
 /* ---------- Section header ---------- */
 .file-tag{
@@ -493,8 +550,10 @@ main{position:relative;z-index:1}
 .manga-card .mc-pages{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
 
 /* ---------- Footer ---------- */
-.footer{
+.footer{ /* ヘッダーと同じ「すりガラスの帯」。机の木目は透けて見える程度に留める */
   position:relative;z-index:1;margin-top:clamp(36px,6vw,72px);
+  background:rgba(26,17,20,.82);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border-top:1px solid rgba(176,138,76,.35);
   padding:clamp(28px,4vw,48px) clamp(14px,3vw,32px) clamp(28px,4vw,40px);
   color:var(--brass-soft);
@@ -1041,13 +1100,112 @@ const MANGA_REPORTS = [
 
   /* ---- ナビの現在地 ---- */
   const links = $$('.nav a[href^="#"]');
-  const targets = links.map(a => $(a.getAttribute('href'))).filter(Boolean);
-  if ('IntersectionObserver' in window && targets.length){
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
+  const setActive = id => links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
+
+  /* ---- 書類スタック（スクロールで紙が積み重なる） ----
+     ・各書類の止まる位置：短い書類は画面上部（重なるごとに少し下へずらす）、
+       画面より長い書類は読み終わった位置＝下端が画面下に来たところで止まる。
+     ・--q：下から差し込まれている最中の度合い（1=画面下端で最大の傾き → 0=まっすぐ着地）
+     ・--d：上に何枚重なったか（連続値）。CSS 側で縮み・暗さに変換。
+     ・スマホでも transform / filter だけを動かすので軽い。 */
+  const sheets = $$('main > section');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const canStack = sheets.length > 1 && !reduceMotion.matches && CSS.supports('position', 'sticky');
+
+  if (canStack){
+    document.body.classList.add('has-stack');
+    const topbarH = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 64;
+    let ticking = false;
+
+    /* 書類ごとの「置かれ方」。順番で決まるので毎回同じ見た目になる。
+       TILT: 山に潜ったときの傾き(deg) / SHIFT: 横ずれ(px) / VARY: 止まる高さの微妙な揺らぎ(px) */
+    const TILT  = [-1.4, 1.1, -0.9, 1.6, -1.2, 0.8, -1.5, 1.3];
+    const SHIFT = [-10, 8, -6, 12, -9, 7, -11, 10];
+    const VARY  = [0, 3, -2, 4, 1, -1, 2, 0];
+    const ENTER = 0.5;   // 画面下端から「画面高さ×この割合」進む間にまっすぐになる
+
+    function layout(){
+      const vh = window.innerHeight, small = window.innerWidth < 640;
+      const base = topbarH() + (small ? 20 : 24);   // 一番上の書類が止まる位置
+      const step = small ? 5 : 8;                    // 重なるごとのずれ（紙の縁が見える量）
+      const gap  = small ? 12 : 16;
+      const k    = small ? 0.6 : 1;                  // スマホは傾き・ずれを控えめに
+      sheets.forEach((sec, i) => {
+        const h = sec.offsetHeight, j = i % 8;
+        const t = base + Math.min(i, 5) * step + VARY[j] * k;
+        sec.style.top = (h <= vh - t - gap ? t : vh - gap - h) + 'px';
+        sec.style.setProperty('--tilt', (TILT[j] * k).toFixed(2) + 'deg');       // 山に潜ったときの傾き
+        sec.style.setProperty('--tilt-in', (TILT[j] * (small ? 2.6 : 3.6)).toFixed(2) + 'deg'); // 差し込み時の傾き（強さはこの倍率で調整）
+        sec.style.setProperty('--shift', (SHIFT[j] * k).toFixed(1) + 'px');
       });
+      update();
+    }
+
+    function update(){
+      ticking = false;
+      const vh = window.innerHeight;
+      let nextDepth = 0, activeId = null;
+      for (let i = sheets.length - 1; i >= 0; i--){
+        const sec = sheets[i], r = sec.getBoundingClientRect();
+        let p = 0;
+        if (sheets[i + 1]){
+          const nr = sheets[i + 1].getBoundingClientRect();
+          p = Math.min(1, Math.max(0, (r.bottom - nr.top) / r.height)); // 次の書類に覆われた割合
+        }
+        const d = p * (1 + nextDepth);
+        nextDepth = d;
+        sec.style.setProperty('--d', d.toFixed(3));
+        sec.classList.toggle('is-under', d > 0.002);
+
+        // 差し込み中の傾き：画面下端で最大、読み始める高さでちょうど 0（smoothstep でぬるっと着地）
+        const e = Math.min(1, Math.max(0, (vh - r.top) / (vh * ENTER)));
+        const q = 1 - e * e * (3 - 2 * e);
+        sec.style.setProperty('--q', q.toFixed(3));
+        sec.classList.toggle('is-entering', q > 0.002);
+
+        if (activeId === null && r.top <= vh * 0.45 && r.bottom > vh * 0.2) activeId = sec.id; // 一番手前の書類
+      }
+      if (activeId !== null) setActive(activeId); // ヒーロー（id なし）なら全部消灯
+    }
+
+    const onScroll = () => { if (!ticking){ ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', layout);
+    window.addEventListener('load', layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+    if ('ResizeObserver' in window){
+      const ro = new ResizeObserver(() => requestAnimationFrame(layout));
+      sheets.forEach(s => ro.observe(s));
+    }
+    layout();
+
+    /* ページ内リンク：貼り付き中の書類はブラウザから見ると位置がずれているので、
+       一瞬だけ貼り付きを外して本来の位置を測り、そこへスクロールする */
+    function staticTop(el){
+      document.body.classList.add('measure-static');
+      const y = el.getBoundingClientRect().top + window.scrollY;
+      document.body.classList.remove('measure-static');
+      return y;
+    }
+    function jumpTo(hash){
+      let target = null;
+      try { target = hash && hash.length > 1 ? document.querySelector(hash) : null; } catch (e) { target = null; }
+      if (!target) return false;
+      const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      window.scrollTo({ top: Math.max(0, staticTop(target) - pad), behavior: 'smooth' });
+      return true;
+    }
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const hash = a.getAttribute('href');
+      if (jumpTo(hash)){ e.preventDefault(); history.pushState(null, '', hash); }
+    });
+    window.addEventListener('hashchange', () => jumpTo(location.hash));
+  } else if ('IntersectionObserver' in window){
+    const targets = links.map(a => $(a.getAttribute('href'))).filter(Boolean);
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if (en.isIntersecting) setActive(en.target.id); });
     }, { rootMargin: '-40% 0px -55% 0px' });
     targets.forEach(t => io.observe(t));
   }
