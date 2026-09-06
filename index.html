@@ -325,21 +325,29 @@ main > section{--d:0;--q:0}
   font-feature-settings:normal; /* 縦書きでは palt を切る（字が重なるのを防ぐ） */
   height:24rem;max-width:100%;overflow-x:auto;overflow-y:hidden;
   font-size:1.04rem;line-height:2.15;letter-spacing:.08em;
-  padding:16px 8px 16px 20px;
+  padding:16px 14px 16px 22px;
   border-right:3px double rgba(122,42,78,.45);
   border-left:1px solid rgba(122,42,78,.25);
-  background:linear-gradient(90deg, rgba(255,255,255,.14), transparent 40%);
+  /* 別紙を貼り込んだように、この段だけ少し明るく浮かせる（書き出しの右側がいちばん明るい） */
+  background:linear-gradient(270deg, rgba(255,251,238,.30), rgba(255,251,238,.11));
+  box-shadow:inset 0 0 22px rgba(255,252,242,.15);
 }
 .story p{margin:0;margin-block-end:1.4em}
 .story p:last-child{margin-block-end:0}
 .story .story-title{
   font-weight:800;font-size:1.3rem;letter-spacing:.3em;color:var(--plum);
   margin-block-end:1.6em;padding-block-end:.4em;
-  border-block-end:1px solid var(--brass);
+  border-block-end:2px solid #8f6a2c;   /* STORY の脇に入る罫（縦書きなので文字の「下」＝左側）*/
 }
 .story .story-sign{font-size:.92rem;color:var(--ink-soft);margin-block-start:.5em}
 .story em{font-style:normal;color:var(--wine);font-weight:700}
 
+/* STORY と任務の間に入れる見出し帯（イベントルールの .rules-note と同じ作り・少しだけ大きめ）*/
+.point-note{
+  text-align:center;font-weight:700;letter-spacing:.16em;color:var(--plum);
+  padding:16px 18px;border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);
+  margin-bottom:clamp(20px,3.2vw,30px);font-size:1.45rem;
+}
 .mission{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .mission-item{
   display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;
@@ -595,7 +603,8 @@ main > section{--d:0;--q:0}
 }
 @media (max-width:900px){
   .story{writing-mode:horizontal-tb;height:auto;overflow:visible;border-right:0;border-left:0;padding:10px 0 0;
-    border-top:3px double rgba(122,42,78,.45);background:none}
+    border-top:3px double rgba(122,42,78,.45);
+    background:none;box-shadow:none}   /* スマホでは明るみなし */
   .story p{margin-block-end:1em}
   .story .story-title{padding-block-end:.3em;margin-block-end:1em}
 }
@@ -656,10 +665,6 @@ main > section{--d:0;--q:0}
         </svg>
         <p class="hero-lead">探偵事務所「RabbitAgency」は、こまどアバターの調査員（キャスト）と助手であるあなたが、“デート中のカップル”を装ってVRChatのワールドを探索し、依頼内容の調査・写真の撮影を行う、お写真デートロールプレイイベントです。</p>
         <ul class="chips" aria-label="開催情報">
-          <li class="chip">不定期開催</li>
-          <li class="chip">23:00 – 24:00</li>
-          <li class="chip">PCVR限定</li>
-          <li class="chip">事前抽選 + 当日リクイン</li>
           <li class="chip">#vrc_RabbitAgency</li>
         </ul>
         <div class="cta">
@@ -672,10 +677,10 @@ main > section{--d:0;--q:0}
           <circle cx="70" cy="70" r="64" fill="none" stroke="#7a2a4e" stroke-width="3"/>
           <circle cx="70" cy="70" r="58" fill="none" stroke="#7a2a4e" stroke-width="1"/>
           <circle cx="70" cy="70" r="40" fill="none" stroke="#7a2a4e" stroke-width="1"/>
-          <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="2.2">
-            <textPath href="#stamp-arc" startOffset="0">RABBIT AGENCY · DETECTIVE OFFICE · VRCHAT ·</textPath>
+          <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="1.9">
+            <textPath href="#stamp-arc" startOffset="0">EXPLORATION AND CAPTURE RABBIT AGENCY</textPath>
           </text>
-          <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="24" font-weight="800" fill="#7a2a4e" letter-spacing="4">受理</text>
+          <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="24" font-weight="800" fill="#7a2a4e" letter-spacing="4">急募</text>
         </svg>
       </div>
 
@@ -685,8 +690,8 @@ main > section{--d:0;--q:0}
         <img src="assets/poster.jpg" alt="探偵助手募集ポスター：業務内容は調査補助。隠密調査のため、調査員と助手は恋人のフリをしながら調査すること。" width="900" height="1200" fetchpriority="high">
       </figure>
     </div>
-    <p class="hero-note">※ 開催日程・応募フォームは毎月、公式X（@vrcRabbitAgency）で告知します。</p>
   </section>
+  <br><br><br>
 
   <!-- ================= ABOUT ================= -->
   <section class="section" id="about" aria-labelledby="about-title">
@@ -710,23 +715,27 @@ main > section{--d:0;--q:0}
           </div>
         </div>
 
+        <div class="mission-block">
+        <p class="point-note">ポイント</p>
+
         <div class="mission">
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">01</span>
-            <div><h3>助手として事務所に集合</h3><p>まずは探偵事務所で、本日のブリーフィングを行います。その日調査するワールドと「任務の内容」をお伝えします。</p></div>
+            <div><h3>可愛いキャストとデートロールプレイ！</h3><p>こまどアバターの可愛いキャストと1v1で少し長めの45分間のデートを楽しめます！！　カフェ系イベントや個室イベントとは違った一面が見られるかも？</p></div>
           </div>
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">02</span>
-            <div><h3>調査員とふたりでワールドへ</h3><p>キャストがインスタンスを開き、ふたりきりで調査に出発。</p></div>
+            <div><h3>お写真に使えるワールドが見つかるかも？</h3><p>イベントのテーマは"お写真デート"！イベントの思い出になるのはもちろん、普段の写真撮影にも使えるワールドが見つかるかもしれません。</p></div>
           </div>
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">03</span>
-            <div><h3>撮影ターゲットを写真に収める</h3><p>二人でデートをしつつ、撮影ターゲットを探してください。見つからなくても調査失敗のペナルティはありません。</p></div>
+            <div><h3>ちょっとしたロールプレイも……？</h3><p>デートを楽しむのは大切ですが、当日発表される任務も忘れずに！出発前には任務の発表とちょっとしたブリーフィングもありますよ。</p></div>
           </div>
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">04</span>
-            <div><h3>事務所に戻って報告・アフター</h3><p>時間になったら事務所へ帰還し、写真を提出。その後はアフター会場で、提出された写真を眺めながら雑談。</p></div>
+            <div><h3>少しですがアフターもあります。</h3><p>時間になったら事務所へ帰還し、写真を提出。その後はアフター会場で、他のペアが提出した写真も見れちゃいます。（自由参加なので一部キャストは不参加の場合もございます。）</p></div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -748,10 +757,10 @@ main > section{--d:0;--q:0}
   <!-- ================= FLOW ================= -->
   <section class="section" id="flow" aria-labelledby="flow-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">SCHEDULE</span><span class="jp">行動記録</span></p>
+      <p class="file-tag"><span class="latin">SCHEDULE</span><span class="jp">行動予定</span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="flow-title">当日の流れ</h2>
-        <p class="sec-lead">集合からアフターまで、約1時間半。時刻は目安です。</p>
+        <p class="sec-lead">集合からアフターまで、約1時間半程度を予定しています。時刻は多少前後する場合がございます</p>
       </header>
 
       <div class="flow-grid">
@@ -862,10 +871,10 @@ main > section{--d:0;--q:0}
         <circle cx="70" cy="70" r="64" fill="none" stroke="#7a2a4e" stroke-width="3"/>
         <circle cx="70" cy="70" r="58" fill="none" stroke="#7a2a4e" stroke-width="1"/>
         <circle cx="70" cy="70" r="40" fill="none" stroke="#7a2a4e" stroke-width="1"/>
-        <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="2.2">
-          <textPath href="#stamp-arc2" startOffset="0">RABBIT AGENCY · TEMPORARY ASSISTANT ·</textPath>
+        <text font-family="Cinzel, serif" font-size="10.5" font-weight="700" fill="#7a2a4e" letter-spacing="1.9">
+          <textPath href="#stamp-arc2" startOffset="0">EXPLORATION AND CAPTURE RABBIT AGENCY</textPath>
         </text>
-        <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="22" font-weight="800" fill="#7a2a4e" letter-spacing="3">募集</text>
+        <text x="70" y="79" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="22" font-weight="800" fill="#7a2a4e" letter-spacing="3">急募</text>
       </svg>
       <header class="sec-head">
         <h2 class="sec-title" id="join-title">参加方法</h2>
