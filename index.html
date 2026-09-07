@@ -289,6 +289,7 @@ main > section{--d:0;--q:0}
 .btn .arrow{font-family:var(--font-type);font-weight:400}
 
 .hero-poster{position:relative;justify-self:center;width:min(100%,420px)}
+.poster-btn{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;-webkit-appearance:none}
 .hero-poster .pin{top:-6px;left:50%;margin-left:-9px}
 .hero-poster img{
   width:100%;height:auto;border:10px solid var(--paper-light);
@@ -577,7 +578,8 @@ main > section{--d:0;--q:0}
 .footer-legal{max-width:var(--max);margin:24px auto 0;font-size:.78rem;color:rgba(214,189,134,.65);font-family:var(--font-type);letter-spacing:.04em}
 
 /* ---------- Lightbox ---------- */
-.lb{position:fixed;inset:0;z-index:90;background:rgba(14,8,10,.92);display:grid;place-items:center;padding:24px}
+.lb{position:fixed;inset:0;z-index:90;background:rgba(14,8,10,.92);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lb .lb-btn{cursor:pointer}
 .lb[hidden]{display:none}
 .lb-figure{margin:0;max-width:min(96vw,1100px);max-height:100%;display:grid;grid-template-rows:1fr auto;gap:12px;justify-items:center}
 .lb-figure img{max-width:100%;max-height:calc(100vh - 120px);object-fit:contain;border:8px solid var(--paper-light);box-shadow:0 30px 60px rgba(0,0,0,.8);background:#1a1114}
@@ -687,7 +689,9 @@ main > section{--d:0;--q:0}
       <figure class="hero-poster">
         <span class="pin" aria-hidden="true"></span>
         <span class="tape" aria-hidden="true"></span>
-        <img src="assets/poster.jpg" alt="探偵助手募集ポスター：業務内容は調査補助。隠密調査のため、調査員と助手は恋人のフリをしながら調査すること。" width="900" height="1200" fetchpriority="high">
+        <button class="poster-btn" type="button" data-full="assets/poster.jpg" data-caption="イベントポスター" aria-label="ポスターを拡大">
+          <img src="assets/poster.jpg" alt="イベントポスター：業務内容は調査補助。隠密調査のため、調査員と助手は恋人のフリをしながら調査すること。" width="900" height="1200" fetchpriority="high">
+        </button>
       </figure>
     </div>
   </section>
@@ -1073,7 +1077,8 @@ const MANGA_REPORTS = [
   btnClose.addEventListener('click', close);
   btnPrev.addEventListener('click', () => step(-1));
   btnNext.addEventListener('click', () => step(1));
-  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  /* 拡大表示中はどこをクリックしても閉じる（送り／閉じるボタンの上だけは除く）*/
+  lb.addEventListener('click', e => { if (!e.target.closest('.lb-btn')) close(); });
   document.addEventListener('keydown', e => {
     if (lb.hidden) return;
     if (e.key === 'Escape') close();
@@ -1081,8 +1086,8 @@ const MANGA_REPORTS = [
     if (e.key === 'ArrowRight' && gallery.length > 1) step(1);
   });
 
-  /* キャスト写真 */
-  $$('.cast-photo').forEach(btn => {
+  /* クリックで拡大する画像（キャスト写真・ヒーローのポスター）。data-full を持つ要素が対象 */
+  $$('[data-full]').forEach(btn => {
     btn.addEventListener('click', () => open([{ src: btn.dataset.full, title: btn.dataset.caption, alt: btn.dataset.caption }]));
   });
 
