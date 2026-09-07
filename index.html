@@ -275,6 +275,16 @@ main > section{--d:0;--q:0}
   padding:4px 10px 3px;border:1px solid rgba(43,29,36,.45);border-radius:2px;
   background:rgba(255,255,255,.22);color:var(--ink);
 }
+/* Xのハッシュタグ検索へ飛ぶチップ */
+a.chip-link{
+  display:inline-flex;align-items:baseline;gap:6px;text-decoration:none;
+  border-color:rgba(122,42,78,.5);color:var(--wine);
+  transition:background .2s, border-color .2s, color .2s;
+}
+a.chip-link:hover,a.chip-link:focus-visible{
+  background:var(--wine);border-color:var(--wine-deep);color:var(--paper-light);
+}
+a.chip-link .arrow{font-size:.9em}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .btn{
   display:inline-flex;align-items:center;gap:10px;text-decoration:none;
@@ -667,7 +677,7 @@ main > section{--d:0;--q:0}
         </svg>
         <p class="hero-lead">探偵事務所「RabbitAgency」は、こまどアバターの調査員（キャスト）と助手であるあなたが、“デート中のカップル”を装ってVRChatのワールドを探索し、依頼内容の調査・写真の撮影を行う、お写真デートロールプレイイベントです。</p>
         <ul class="chips" aria-label="開催情報">
-          <li class="chip">#vrc_RabbitAgency</li>
+          <li><a class="chip chip-link" href="https://x.com/search?q=%23vrc_RabbitAgency" target="_blank" rel="noopener">#vrc_RabbitAgency <span class="arrow">↗</span></a></li>
         </ul>
         <div class="cta">
           <a class="btn btn-primary" href="#join">参加方法を見る <span class="arrow">→</span></a>
@@ -702,8 +712,8 @@ main > section{--d:0;--q:0}
     <div class="sheet">
       <p class="file-tag"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></p>
       <header class="sec-head">
-        <h2 class="sec-title" id="about-title">イベント概要</h2>
-        <p class="sec-lead">VRC_RabbitAgencyは、VRChatの「偽装カップルお写真デート」ロールプレイイベントです。</p>
+        <h2 class="sec-title" id="about-title">どんなイベント？</h2>
+        <p class="sec-lead">VRC_RabbitAgencyは、こまどアバター「偽装カップルお写真デート」ロールプレイイベントです。</p>
       </header>
 
       <div class="about-grid">
@@ -725,7 +735,7 @@ main > section{--d:0;--q:0}
         <div class="mission">
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">01</span>
-            <div><h3>可愛いキャストとデートロールプレイ！</h3><p>こまどアバターの可愛いキャストと1v1で少し長めの45分間のデートを楽しめます！！　カフェ系イベントや個室イベントとは違った一面が見られるかも？</p></div>
+            <div><h3>可愛いキャストと偽装デート！</h3><p>こまどアバターの可愛いキャストと1v1で少し長めの45分間のデートを楽しめます！！　カフェ系イベントや個室イベントとは違った一面が見られるかも？</p></div>
           </div>
           <div class="mission-item">
             <span class="glyph" aria-hidden="true">02</span>
@@ -763,7 +773,7 @@ main > section{--d:0;--q:0}
     <div class="sheet">
       <p class="file-tag"><span class="latin">SCHEDULE</span><span class="jp">行動予定</span></p>
       <header class="sec-head">
-        <h2 class="sec-title" id="flow-title">当日の流れ</h2>
+        <h2 class="sec-title" id="flow-title">イベントの流れ</h2>
         <p class="sec-lead">集合からアフターまで、約1時間半程度を予定しています。時刻は多少前後する場合がございます</p>
       </header>
 
