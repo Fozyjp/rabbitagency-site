@@ -380,6 +380,25 @@ a.chip-link .arrow{font-size:.9em}
 .mission-item h3{font-size:1.08rem;color:var(--plum);letter-spacing:.06em}
 .mission-item p{margin-top:4px;font-size:.95rem;color:var(--ink-soft)}
 
+/* よくある質問。任務カードと同じ紙面の作りに揃えている */
+.faq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0}
+.faq-item{
+  padding:16px 18px;background:rgba(255,255,255,.2);
+  border:1px solid rgba(122,42,78,.22);
+}
+.faq-item dt,.faq-item dd{
+  display:grid;grid-template-columns:2.2em 1fr;gap:12px;align-items:start;margin:0;
+}
+.faq-item dt{font-size:1.06rem;font-weight:700;color:var(--plum);letter-spacing:.04em;line-height:1.7}
+.faq-item dd{margin-top:10px;font-size:.95rem;color:var(--ink-soft)}
+.faq .q,.faq .a{
+  width:2.2em;height:2.2em;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--font-latin);font-weight:700;font-size:.82em;line-height:1;
+  margin-top:.15em;
+}
+.faq .q{background:var(--wine);color:var(--paper-light);box-shadow:0 2px 0 var(--wine-deep)}
+.faq .a{border:1.5px solid var(--brass);color:var(--wine);background:rgba(255,255,255,.3)}
+
 .spec{margin-top:clamp(28px,4vw,44px);border-top:2px solid var(--plum);}
 .spec dl{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(20px,4vw,48px);margin:0;
@@ -643,6 +662,7 @@ a.chip-link .arrow{font-size:.9em}
   .cast-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cast-meta .role{font-size:.58rem;letter-spacing:.14em}   /* 2列の幅に収める */
   .mission{grid-template-columns:1fr}
+  .faq{grid-template-columns:1fr}
   .manga-empty{grid-template-columns:1fr}
   .koma{max-width:280px}
   .timeline li{grid-template-columns:6.4ch 1fr;gap:12px}
@@ -761,6 +781,29 @@ a.chip-link .arrow{font-size:.9em}
             <div><h3>少しですがアフターもあります。</h3><p>時間になったら事務所へ帰還し、写真を提出。その後はアフター会場で、他のペアが提出した写真も見れちゃいます。（自由参加なので一部キャストは不参加の場合もございます。）</p></div>
           </div>
         </div>
+        </div>
+
+        <div class="faq-block">
+        <p class="point-note">よくある質問</p>
+
+        <dl class="faq">
+          <div class="faq-item">
+            <dt><span class="q" aria-hidden="true">Q</span>自分もこまどアバターの方が良いの？</dt>
+            <dd><span class="a" aria-hidden="true">A</span>お客様のアバターの指定はございません。ただし、運営の都合上人型アバターでのご来場をお願いしています。</dd>
+          </div>
+          <div class="faq-item">
+            <dt><span class="q" aria-hidden="true">Q</span>ロールプレイは苦手なんだけど……。</dt>
+            <dd><span class="a" aria-hidden="true">A</span>ロールプレイが苦手な方でも大丈夫です。当イベントはロールプレイ要素は控えめのイベントになっていますので、苦手な方でもお気軽にご参加ください。</dd>
+          </div>
+          <div class="faq-item">
+            <dt><span class="q" aria-hidden="true">Q</span>無言勢なんですが参加できますか？</dt>
+            <dd><span class="a" aria-hidden="true">A</span>無言勢の方はチャットボックスを使用した意思疎通ができればご参加いただけます。ただし、探索先のワールドによってはQVペンが無い場合が多くなっております。ご了承ください。</dd>
+          </div>
+          <div class="faq-item">
+            <dt><span class="q" aria-hidden="true">Q</span>ワールド巡りは酔いやすくて不安</dt>
+            <dd><span class="a" aria-hidden="true">A</span>開始時にキャストにその旨をお伝えください。イベントの&quot;任務&quot;はある程度ワールドを探索することを前提としておりますが、達成できなかったことによるペナルティ等はございません。（もちろん、動き回れる方が楽しめるかと思いますので、各自対策していただければ幸いです。）</dd>
+          </div>
+        </dl>
         </div>
       </div>
 
@@ -1006,7 +1049,7 @@ a.chip-link .arrow{font-size:.9em}
       <p class="file-tag"><span class="latin">REPORT</span><span class="jp">調査報告書</span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="manga-title">ルポマンガ</h2>
-        <p class="sec-lead">営業日の出来事を、ルポマンガとしてここに綴っていきます。</p>
+        <p class="sec-lead">営業時のルポマンガを掲載できたらいいな～という場所</p>
       </header>
 
      （ 掲載作品は index.html 末尾の <script> 内 MANGA_REPORTS に追記すると、ここに自動で並びます）
