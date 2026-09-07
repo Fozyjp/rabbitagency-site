@@ -55,11 +55,13 @@
 
   --max:1120px;
   --sheet-pad:clamp(28px,5vw,64px);
-  --topbar-h:64px;
+  --topbar-h:70px;
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px)}
+/* 文字の基準サイズ。ページ内の rem 指定はすべてこれに追従するので、
+   読みにくいときはこの 112.5%（＝18px）を上げ下げすれば全体が一緒に変わる */
+html{font-size:112.5%;scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px)}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
@@ -67,7 +69,7 @@ html{scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px)}
 body{
   margin:0;
   font-family:var(--font-jp);
-  font-size:16px;
+  font-size:1rem;
   line-height:1.9;
   color:var(--paper);
   background:var(--desk);   /* 天板画像が来るまでの下地 */
@@ -241,7 +243,12 @@ main > section{--d:0;--q:0}
   content:"";display:block;width:64px;height:2px;margin-top:14px;
   background:linear-gradient(90deg, var(--wine), var(--brass));
 }
-.sec-lead{margin-top:16px;max-width:60em;color:var(--ink-soft);font-size:1.02rem}
+/* 見出しの下のリード文。本文より一段大きく・濃くして読ませる */
+.sec-lead{
+  margin-top:18px;max-width:60em;
+  color:var(--ink);font-size:1.06rem;font-weight:600;
+  letter-spacing:.03em;line-height:1.85;
+}
 
 /* ---------- Hero ---------- */
 .hero{
@@ -519,7 +526,9 @@ a.chip-link .arrow{font-size:.9em}
 }
 .cast-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .cast:hover .cast-photo img{transform:scale(1.03)}
-.cast-meta{padding:12px 6px 2px;display:grid;gap:2px}
+.cast-meta{padding:12px 6px 2px;display:grid;gap:2px;min-width:0}
+.cast-meta > *{min-width:0;overflow-wrap:anywhere}   /* 長いローマ字表記がカードからはみ出さないように */
+.cast-meta .role{white-space:nowrap;overflow-wrap:normal}  /* INVESTIGATOR は途中で折り返さない */
 .cast-meta .role{font-family:var(--font-latin);font-size:.62rem;letter-spacing:.3em;color:var(--brass);font-weight:700}
 .cast-meta h3{font-size:1.15rem;letter-spacing:.08em;color:var(--plum)}
 .cast-meta .romaji{font-family:var(--font-latin);font-size:.72rem;letter-spacing:.14em;color:var(--ink-soft)}
@@ -580,12 +589,13 @@ a.chip-link .arrow{font-size:.9em}
 .footer-in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
 .footer .brand{transform:rotate(-1deg)}
 .footer .brand img{height:36px}
-.footer-copy{font-size:.9rem;line-height:1.8}
+/* フッターだけは基準サイズを上げる前の大きさに戻してある（.9rem×16/18＝.8rem 相当）*/
+.footer-copy{font-size:.8rem;line-height:1.8}
 .footer-copy .tag{font-family:var(--font-type);color:var(--paper)}
 .footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
-.footer-links a{color:var(--paper);text-decoration:none;font-size:.9rem;letter-spacing:.06em;border-bottom:1px solid rgba(176,138,76,.6);padding-bottom:2px}
+.footer-links a{color:var(--paper);text-decoration:none;font-size:.8rem;letter-spacing:.06em;border-bottom:1px solid rgba(176,138,76,.6);padding-bottom:2px}
 .footer-links a:hover{color:var(--brass-soft);border-bottom-color:var(--brass-soft)}
-.footer-legal{max-width:var(--max);margin:24px auto 0;font-size:.78rem;color:rgba(214,189,134,.65);font-family:var(--font-type);letter-spacing:.04em}
+.footer-legal{max-width:var(--max);margin:24px auto 0;font-size:.69rem;color:rgba(214,189,134,.65);font-family:var(--font-type);letter-spacing:.04em}
 
 /* ---------- Lightbox ---------- */
 .lb{position:fixed;inset:0;z-index:90;background:rgba(14,8,10,.92);display:grid;place-items:center;padding:24px;cursor:zoom-out}
@@ -629,8 +639,9 @@ a.chip-link .arrow{font-size:.9em}
   .spec dl{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-  body{font-size:15px}
+  body{font-size:.95rem}
   .cast-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cast-meta .role{font-size:.58rem;letter-spacing:.14em}   /* 2列の幅に収める */
   .mission{grid-template-columns:1fr}
   .manga-empty{grid-template-columns:1fr}
   .koma{max-width:280px}
@@ -669,7 +680,7 @@ a.chip-link .arrow{font-size:.9em}
         <p class="hero-ribbon">こまどアバター お写真デートRPイベント</p>
         <div class="hero-logo"><img src="RabbitAgencyLogo.png" alt="Exploration And Capture RabbitAgency" width="893" height="495"></div>
         <h1 class="hero-title" id="hero-title">探偵助手、募集中。</h1>
-        <p class="hero-sub">調査員（キャスト）とふたり、恋人のフリをして——<br>ワールドを調査し、写真を撮ってくること。</p>
+        <p class="hero-sub">調査員（キャスト）とふたり、恋人のフリをして<br>ワールドを調査し、写真を撮ってくること。</p>
         <svg class="flourish" viewBox="0 0 180 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
           <path d="M2 9h60M118 9h60"/><path d="M62 9c8-8 16-8 24 0-8 8-16 8-24 0z" fill="currentColor" stroke="none" opacity=".9"/>
           <path d="M84 9c6-6 12-6 16 0-4 6-10 6-16 0z" fill="currentColor" stroke="none" opacity=".55" transform="translate(12 0)"/>
@@ -785,7 +796,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="22:55">22:55</time>
-            <div class="tl-body"><h3>当日リクイン受付 <span class="dur">〜22:58</span></h3><p>当日枠の方は「Fozy_event」へリクイン。事務所に着いたら、奥の部屋でお待ちください。</p></div>
+            <div class="tl-body"><h3>当日リクイン受付 <span class="dur">〜22:58</span></h3><p>当日枠にチャレンジする場合はこの時間中に1度だけ「Fozy_event」へリクインを送ってください。<br>当選者の方には59分までにインバイトを送付します。</p></div>
           </li>
           <li>
             <time datetime="23:00">23:00</time>
@@ -913,7 +924,7 @@ a.chip-link .arrow{font-size:.9em}
           <p class="route-when">当日 22:55 – 22:58 受付</p>
           <ol class="steps">
             <li><strong>当日夕方までにフレンド申請</strong><span>リクイン先アカウント「<a href="https://vrchat.com/home/user/usr_b2ee0dab-cbd1-4791-b475-f875ac3dca9f" target="_blank" rel="noopener">Fozy_event</a>」へ、当日夕方までにフレンド申請をお願いします。</span></li>
-            <li><strong>22:55〜22:58 にリクイン</strong><span>受付時間内に「Fozy_event」へリクエストインバイトを送ります。</span></li>
+            <li><strong>22:55〜22:58 にリクイン</strong><span>受付時間内に「Fozy_event」へインバイトリクエストを送ります。</span></li>
             <li><strong>抽選</strong><span>当選者の方には、22:59までにインバイトをお送りします。</span></li>
           </ol>
           <p class="route-foot">※ 事前抽選に外れてしまった方も、もちろんご応募いただけます。</p>
@@ -1024,10 +1035,6 @@ a.chip-link .arrow{font-size:.9em}
     <a class="brand" href="#top" aria-label="RabbitAgency トップへ"><img src="RabbitAgencymonow.png" alt="Exploration And Capture RabbitAgency"></a>
     <p class="footer-copy">探偵事務所「vrc_RabbitAgency」は、VRChat内で開催されるお写真デートRPイベントです。<br><span class="tag">#vrc_RabbitAgency</span></p>
     <nav class="footer-links" aria-label="フッターメニュー">
-      <a href="#about">概要</a>
-      <a href="#rules">ルール</a>
-      <a href="#join">参加方法</a>
-      <a href="#cast">キャスト</a>
       <a href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式X ↗</a>
     </nav>
   </div>
