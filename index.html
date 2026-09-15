@@ -166,22 +166,17 @@ main > section:nth-of-type(6n) .sheet::before{transform:scale(-1,-1)}
 }
 .sheet > *{position:relative;z-index:1}
 
-/* 画鋲。針（::before）を先に描いて、その上に頭（::after）を重ねるので、
-   針は頭の後ろから出ているように見える */
-.pin{position:absolute;z-index:3;width:18px;height:18px}
-.pin::before{ /* 針 */
-  /* 頭の底の中心あたりを支点にするので、針は玉の真下から出ているように見える */
-  content:"";position:absolute;left:calc(50% - 1px);top:72%;width:2px;height:20px;
-  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.12));
-  transform:rotate(-20deg);transform-origin:top;
-}
-.pin::after{ /* 頭 */
-  content:"";position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 35% 32%, #f08a97 0%, var(--pin) 45%, #6d1a27 100%);
-  box-shadow:0 4px 5px rgba(0,0,0,.55), inset 0 -2px 3px rgba(0,0,0,.35);
+/* 紙を留めているマスキングテープ（クラス名は .pin のままだが中身はテープ）。
+   紙の上端をまたぐように置き、少しだけ透けさせて貼った感じを出す */
+.pin{
+  position:absolute;z-index:3;width:46px;height:72px;
+  background:url("assets/tape.png") center/100% 100% no-repeat;
+  opacity:.9;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));
 }
 
-.section{margin-top:clamp(36px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
+/* タブが紙の上端から 32〜42px はみ出すので、セクション間は最低 52px 空けている */
+.section{margin-top:clamp(52px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
 .section:last-of-type{margin-bottom:clamp(36px,6vw,72px)}
 .section .sheet{max-width:var(--max);margin:0 auto;padding:var(--sheet-pad)}
 
@@ -228,16 +223,45 @@ main > section{--d:0;--q:0}
 }
 
 /* ---------- Section header ---------- */
+/* 書類のインデックス。紙の上端に少し被さる「帯」と、そこから盛り上がる「台形のタブ」。
+   帯と台形は【1つの要素】で、clip-path でその輪郭をまとめて切り抜いている。
+   こうすると背景画像（assets/tab.png）も1枚で済み、境目に線や継ぎ目が絶対に出ない。
+   ポリゴンの頂点は、左右の余白（--band-l / --band-r）と段差の高さ（--tab-h）だけで決まるので、
+   文字数が変わっても形は崩れない。台形の上の角は多点でベジェ曲線を近似して軽く丸めている。 */
 .file-tag{
-  position:absolute;top:-16px;left:clamp(20px,4vw,48px);z-index:4;
-  display:inline-flex;align-items:baseline;gap:10px;
-  background:var(--paper-2);border:1px solid var(--brass);
-  padding:5px 16px 4px;border-radius:2px 2px 0 0;
-  box-shadow:0 -1px 0 rgba(255,255,255,.4) inset, 0 3px 6px rgba(0,0,0,.25);
-  transform:rotate(-.6deg);transform-origin:left bottom;
+  --tab-h:36px;      /* 台形部分の高さ（＝帯との段差） */
+  --band-h:26px;     /* 帯の高さ */
+  --over:20px;       /* 帯が紙に被る量 */
+  --band-l:34px;     /* 台形の左に出る帯の長さ */
+  --band-r:62px;     /* 台形の右に出る帯の長さ */
+  --tab-pad:26px;    /* 台形の内側の余白 */
+  position:absolute;left:clamp(14px,2.4vw,26px);bottom:calc(100% - var(--over));z-index:4;margin:0;
+  display:inline-flex;align-items:flex-start;
+  height:calc(var(--tab-h) + var(--band-h));
+  padding:0 calc(var(--band-r) + var(--tab-pad)) 0 calc(var(--band-l) + var(--tab-pad));
+  background:url("assets/tab.jpg") center/100% 100% no-repeat,
+             linear-gradient(180deg,#85305a,#541c36);   /* 画像が無い時の保険 */
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.45));
+  clip-path:polygon(
+    var(--band-l) var(--tab-h),
+    calc(var(--band-l) + 11.5px) 6.5px,
+    calc(var(--band-l) + 13.6px) 2.9px,
+    calc(var(--band-l) + 16.8px) .8px,
+    calc(var(--band-l) + 21px) 0,
+    calc(100% - var(--band-r) - 21px) 0,
+    calc(100% - var(--band-r) - 16.8px) .8px,
+    calc(100% - var(--band-r) - 13.6px) 2.9px,
+    calc(100% - var(--band-r) - 11.5px) 6.5px,
+    calc(100% - var(--band-r)) var(--tab-h),
+    100% var(--tab-h),
+    100% 100%,
+    0 100%,
+    0 var(--tab-h)
+  );
 }
-.file-tag .latin{font-family:var(--font-latin);font-size:.72rem;letter-spacing:.22em;color:var(--wine);font-weight:700}
-.file-tag .jp{font-size:.9rem;letter-spacing:.2em;color:var(--ink)}
+.file-tag .tag-tab{display:inline-flex;align-items:center;gap:12px;height:var(--tab-h)}
+.file-tag .latin{font-family:var(--font-latin);font-size:.72rem;letter-spacing:.22em;color:#e9d3a2;font-weight:700}
+.file-tag .jp{font-size:.9rem;letter-spacing:.2em;color:#f7edd8}
 .sec-head{margin-bottom:clamp(24px,4vw,40px)}
 .sec-title{
   font-size:clamp(1.9rem,4.2vw,2.8rem);font-weight:800;letter-spacing:.12em;
@@ -264,7 +288,7 @@ main > section{--d:0;--q:0}
   gap:clamp(28px,4vw,56px);align-items:center;
 }
 .hero-sheet{padding:var(--sheet-pad)}
-.hero-sheet .pin{top:-8px;left:50%;margin-left:-9px}
+.hero-sheet .pin{top:-34px;left:50%;margin-left:-23px;transform:rotate(-3deg)}
 .hero-ribbon{
   display:inline-block;font-size:.9rem;letter-spacing:.24em;color:var(--paper-light);
   background:var(--plum);padding:6px 18px;border-radius:1px;
@@ -311,7 +335,7 @@ a.chip-link .arrow{font-size:.9em}
 
 .hero-poster{position:relative;justify-self:center;width:min(100%,420px)}
 .poster-btn{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;-webkit-appearance:none}
-.hero-poster .pin{top:-6px;left:50%;margin-left:-9px}
+.hero-poster .pin{top:-32px;left:50%;margin-left:-23px;transform:rotate(3deg)}
 .hero-poster img{
   width:100%;height:auto;border:10px solid var(--paper-light);
   box-shadow:0 30px 50px -20px rgba(0,0,0,.9), 0 3px 8px rgba(0,0,0,.5);
@@ -319,12 +343,12 @@ a.chip-link .arrow{font-size:.9em}
   transition:transform .35s ease;
 }
 .hero-poster:hover img{transform:rotate(0deg) scale(1.01)}
-.hero-poster .tape{
-  position:absolute;width:96px;height:26px;left:-22px;bottom:34px;z-index:3;
-  background:rgba(232,215,170,.75);transform:rotate(-38deg);
-  box-shadow:0 1px 2px rgba(0,0,0,.25);
+.hero-poster .tape{ /* 左下の角を留めているテープ。上のテープと同じ素材に揃えている */
+  position:absolute;width:48px;height:76px;left:-21px;bottom:26px;z-index:3;
+  background:url("assets/tape.png") center/100% 100% no-repeat;
+  opacity:.9;transform:rotate(52deg);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));
 }
-.hero-poster .tape::after{content:"";position:absolute;inset:0;background-image:var(--noise-paper);opacity:.35}
 .stamp{
   position:absolute;z-index:4;width:132px;height:132px;pointer-events:none;
   mix-blend-mode:multiply;opacity:.82;
@@ -528,7 +552,8 @@ a.chip-link .arrow{font-size:.9em}
 .join-note strong{display:block;color:var(--plum);letter-spacing:.06em;margin-bottom:4px;font-size:.98rem}
 .join-cta{margin-top:clamp(24px,4vw,36px);display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:center;text-align:center}
 .join-cta p{font-size:.95rem;color:var(--ink-soft)}
-.join .stamp{right:18px;top:-18px;transform:rotate(12deg);width:120px;height:120px}
+/* 「急募」スタンプ。紙からはみ出さないよう、余白の内側に収める */
+.join .stamp{right:clamp(16px,3vw,34px);top:clamp(16px,2.6vw,30px);transform:rotate(12deg);width:120px;height:120px}
 
 /* ---------- Cast ---------- */
 .cast-grid{
@@ -546,7 +571,12 @@ a.chip-link .arrow{font-size:.9em}
 .cast:nth-child(4n+3){transform:rotate(-.6deg)}
 .cast:nth-child(4n+4){transform:rotate(1.2deg)}
 .cast:hover,.cast:focus-within{transform:rotate(0) translateY(-6px);box-shadow:0 30px 40px -20px rgba(0,0,0,.9), 0 4px 10px rgba(0,0,0,.4);z-index:2}
-.cast .pin{top:-9px;left:50%;margin-left:-9px;width:16px;height:16px}
+.cast .pin{top:-26px;left:50%;margin-left:-19px;width:38px;height:60px}
+/* カードごとにテープの角度を変えて、貼った手つきをばらけさせる */
+.cast:nth-child(4n+1) .pin{transform:rotate(4deg)}
+.cast:nth-child(4n+2) .pin{transform:rotate(-5deg)}
+.cast:nth-child(4n+3) .pin{transform:rotate(2deg)}
+.cast:nth-child(4n+4) .pin{transform:rotate(-3deg)}
 .cast-photo{
   display:block;width:100%;padding:0;border:0;background:#2a1f24;cursor:zoom-in;
   aspect-ratio:9/16;overflow:hidden;
@@ -613,12 +643,15 @@ a.chip-link .arrow{font-size:.9em}
   padding:clamp(28px,4vw,48px) clamp(14px,3vw,32px) clamp(28px,4vw,40px);
   color:var(--brass-soft);
 }
-.footer-in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.footer-in{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center}
 .footer .brand{transform:rotate(-1deg)}
 .footer .brand img{height:36px}
 /* フッターだけは基準サイズを上げる前の大きさに戻してある（.9rem×16/18＝.8rem 相当）*/
-.footer-copy{font-size:.8rem;line-height:1.8}
+.footer-copy{font-size:.8rem;line-height:1.55}
 .footer-copy .tag{font-family:var(--font-type);color:var(--paper)}
+/* 運営者名のXリンク。フッター下部のリンクと同じ見た目に揃えている */
+.footer-copy a{color:var(--paper);text-decoration:none;border-bottom:1px solid rgba(176,138,76,.6)}
+.footer-copy a:hover{color:var(--brass-soft);border-bottom-color:var(--brass-soft)}
 .footer-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end}
 .footer-links a{color:var(--paper);text-decoration:none;font-size:.8rem;letter-spacing:.06em;border-bottom:1px solid rgba(176,138,76,.6);padding-bottom:2px}
 .footer-links a:hover{color:var(--brass-soft);border-bottom-color:var(--brass-soft)}
@@ -661,7 +694,7 @@ a.chip-link .arrow{font-size:.9em}
   .hero-grid{grid-template-columns:1fr}
   .hero-poster{width:min(100%,340px);margin-top:10px}
   .routes{grid-template-columns:1fr}
-  .footer-in{grid-template-columns:1fr;justify-items:start}
+  .footer-in{grid-template-columns:1fr;justify-items:start;gap:14px}
   .footer-links{justify-content:flex-start}
   .spec dl{grid-template-columns:1fr}
 }
@@ -676,8 +709,13 @@ a.chip-link .arrow{font-size:.9em}
   .timeline li{grid-template-columns:6.4ch 1fr;gap:12px}
   .timeline li::before{left:calc(6.4ch + 12px + 9px)}
   .hero-sheet .stamp{width:96px;height:96px;right:6px;bottom:4px}
+  .join .stamp{width:88px;height:88px;right:22px;top:20px}
   .spec .row{grid-template-columns:1fr;gap:2px}
   .sheet::after{inset:8px}
+  .file-tag{--tab-h:30px;--band-h:20px;--over:15px;--band-l:18px;--band-r:34px;--tab-pad:16px}
+  .file-tag .tag-tab{gap:9px}
+  .file-tag .latin{font-size:.62rem;letter-spacing:.16em}
+  .file-tag .jp{font-size:.78rem;letter-spacing:.14em}
   .nav a{padding:8px 9px;font-size:.88rem}
 }
 </style>
@@ -749,7 +787,7 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= ABOUT ================= -->
   <section class="section" id="about" aria-labelledby="about-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="about-title">どんなイベント？</h2>
         <p class="sec-lead">VRC_RabbitAgencyは、こまどアバター「偽装カップルお写真デート」ロールプレイイベントです。</p>
@@ -833,7 +871,7 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= FLOW ================= -->
   <section class="section" id="flow" aria-labelledby="flow-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">SCHEDULE</span><span class="jp">行動予定</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">SCHEDULE</span><span class="jp">行動予定</span></span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="flow-title">イベントの流れ</h2>
         <p class="sec-lead">集合からアフターまで、約1時間半程度を予定しています。時刻は多少前後する場合がございます</p>
@@ -893,10 +931,10 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= RULES ================= -->
   <section class="section" id="rules" aria-labelledby="rules-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">RULE</span><span class="jp">事務所規則</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">RULE</span><span class="jp">事務所規則</span></span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="rules-title">イベントルール</h2>
-        <p class="sec-lead">安心して調査に集中していただくためのお約束です。ご参加前に必ずご確認ください。</p>
+        <p class="sec-lead">安心して調査に集中していただくための決まり事です。参加前に必ずご確認ください。</p>
       </header>
 
       <p class="rules-note">イベント入場後は、必ずスタッフの案内・指示に従ってください。</p>
@@ -941,7 +979,7 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= JOIN ================= -->
   <section class="section join" id="join" aria-labelledby="join-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">HOW TO JOIN</span><span class="jp">助手応募要項</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">HOW TO JOIN</span><span class="jp">助手応募要項</span></span></p>
       <svg class="stamp" viewBox="0 0 140 140" aria-hidden="true">
         <defs><path id="stamp-arc2" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0"/></defs>
         <circle cx="70" cy="70" r="64" fill="none" stroke="#7a2a4e" stroke-width="3"/>
@@ -992,7 +1030,7 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= CAST ================= -->
   <section class="section" id="cast" aria-labelledby="cast-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">INVESTIGATORS</span><span class="jp">調査員名簿</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">INVESTIGATORS</span><span class="jp">調査員名簿</span></span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="cast-title">キャスト紹介</h2>
         <p class="sec-lead">探偵事務所 RabbitAgency の所属キャストの一覧です。写真をクリックすると拡大できます。</p>
@@ -1075,7 +1113,7 @@ a.chip-link .arrow{font-size:.9em}
   <!-- ================= MANGA（ルポマンガ） =================
   <section class="section" id="manga" aria-labelledby="manga-title">
     <div class="sheet">
-      <p class="file-tag"><span class="latin">REPORT</span><span class="jp">調査報告書</span></p>
+      <p class="file-tag"><span class="tag-tab"><span class="latin">REPORT</span><span class="jp">調査報告書</span></span></p>
       <header class="sec-head">
         <h2 class="sec-title" id="manga-title">ルポマンガ</h2>
         <p class="sec-lead">営業時のルポマンガを掲載できたらいいな～という場所</p>
@@ -1105,7 +1143,7 @@ a.chip-link .arrow{font-size:.9em}
 <footer class="footer">
   <div class="footer-in">
     <a class="brand" href="#top" aria-label="RabbitAgency トップへ"><img src="RabbitAgencymonow.png" alt="Exploration And Capture RabbitAgency"></a>
-    <p class="footer-copy">探偵事務所「vrc_RabbitAgency」は、VRChat内で開催されるお写真デートRPイベントです。<br><span class="tag">#vrc_RabbitAgency</span></p>
+    <p class="footer-copy">探偵事務所「vrc_RabbitAgency」は、VRChat内で開催されるお写真デートRPイベントです。<br><span class="tag">#vrc_RabbitAgency</span><br>運営：<a href="https://x.com/Fozyjp" target="_blank" rel="noopener">Fozyjp</a>、<a href="https://x.com/izaVRCy" target="_blank" rel="noopener">いざし～</a>、<a href="https://x.com/ametori11_vrc" target="_blank" rel="noopener">あめとり</a></p>
     <nav class="footer-links" aria-label="フッターメニュー">
       <a href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式X ↗</a>
     </nav>
