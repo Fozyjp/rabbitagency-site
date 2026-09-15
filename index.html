@@ -166,15 +166,19 @@ main > section:nth-of-type(6n) .sheet::before{transform:scale(-1,-1)}
 }
 .sheet > *{position:relative;z-index:1}
 
-.pin{
-  position:absolute;z-index:3;width:18px;height:18px;border-radius:50%;
+/* 画鋲。針（::before）を先に描いて、その上に頭（::after）を重ねるので、
+   針は頭の後ろから出ているように見える */
+.pin{position:absolute;z-index:3;width:18px;height:18px}
+.pin::before{ /* 針 */
+  /* 頭の底の中心あたりを支点にするので、針は玉の真下から出ているように見える */
+  content:"";position:absolute;left:calc(50% - 1px);top:72%;width:2px;height:20px;
+  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.12));
+  transform:rotate(-20deg);transform-origin:top;
+}
+.pin::after{ /* 頭 */
+  content:"";position:absolute;inset:0;border-radius:50%;
   background:radial-gradient(circle at 35% 32%, #f08a97 0%, var(--pin) 45%, #6d1a27 100%);
   box-shadow:0 4px 5px rgba(0,0,0,.55), inset 0 -2px 3px rgba(0,0,0,.35);
-}
-.pin::after{ /* 針の影 */
-  content:"";position:absolute;left:8px;top:14px;width:2px;height:14px;
-  background:linear-gradient(180deg, rgba(0,0,0,.45), transparent);
-  transform:rotate(-25deg);transform-origin:top;
 }
 
 .section{margin-top:clamp(36px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
@@ -420,7 +424,7 @@ a.chip-link .arrow{font-size:.9em}
   position:relative;padding:0 0 26px;
 }
 .timeline li::before{ /* 縦罫 */
-  content:"";position:absolute;left:calc(7.6ch + 18px + 9px);top:16px;bottom:-4px;width:1px;
+  content:"";position:absolute;left:calc(7.6ch + 18px + 10px);top:30px;bottom:-4px;width:1px;
   background:rgba(122,42,78,.35);
 }
 .timeline li:last-child::before{display:none}
@@ -429,12 +433,16 @@ a.chip-link .arrow{font-size:.9em}
   font-variant-numeric:tabular-nums;padding-top:3px;white-space:nowrap;
 }
 .timeline .tl-body{position:relative;padding-left:34px}
-.timeline .tl-body::before{ /* 真鍮の鋲 */
-  content:"";position:absolute;left:3px;top:9px;width:13px;height:13px;border-radius:50%;
-  background:radial-gradient(circle at 35% 35%, var(--brass-soft), var(--brass) 60%, #7a5a2a);
-  box-shadow:0 1px 2px rgba(0,0,0,.4);
+.timeline .tl-body::before{ /* ペンのアイコン */
+  content:"";position:absolute;left:-2px;top:3px;width:24px;height:24px;
+  background:url("assets/icon_RApen.png") center/contain no-repeat;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.35));
 }
-.timeline li.is-main .tl-body::before{background:radial-gradient(circle at 35% 35%, #d98aa6, var(--wine) 60%, var(--wine-deep));width:17px;height:17px;left:1px;top:7px}
+/* 調査開始の行だけカメラのアイコン。少し大きく */
+.timeline li.is-main .tl-body::before{
+  background-image:url("assets/icon_RAcam.png");
+  width:30px;height:30px;left:-5px;top:0;
+}
 .timeline h3{font-size:1.12rem;color:var(--plum);letter-spacing:.05em}
 .timeline .dur{font-family:var(--font-type);font-size:.8rem;color:var(--ink-soft);margin-left:8px;letter-spacing:.02em}
 .timeline p{margin-top:4px;font-size:.96rem;color:var(--ink-soft)}
@@ -851,7 +859,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="23:55">23:55</time>
-            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約15分</span></h3><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で２０分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
+            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約20分</span></h3><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で20分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
           </li>
           <li>
             <time datetime="00:20">24:20</time>
@@ -974,7 +982,8 @@ a.chip-link .arrow{font-size:.9em}
         </article>
       </div>
       <div class="join-cta">
-        <p><strong>不定期営業の為、次回の営業日と応募フォームは公式Xの最新ポストをご確認ください。</strong></p>
+        <p><strong>不定期営業の為、次回の営業日と応募フォームは公式Xの最新ポストをご確認ください。<br>
+        また、公式XではRTキャンペーン等も開催予定です。是非フォローお願いします。</strong></p>
         <a class="btn btn-primary" href="https://x.com/vrcRabbitAgency" target="_blank" rel="noopener">公式Xで告知を見る <span class="arrow">↗</span></a>
       </div>
     </div>
@@ -1034,6 +1043,26 @@ a.chip-link .arrow{font-size:.9em}
           <span class="pin" aria-hidden="true"></span>
           <button class="cast-photo" type="button" data-full="CastPhotos/chiwawa2_RAn.jpg" data-caption="チワワ七世" aria-label="チワワ七世の写真を拡大"><img src="CastPhotos/chiwawa2_RAn.jpg" alt="調査員 チワワ七世" loading="lazy" width="1080" height="1920"></button>
           <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>チワワ七世</h3><span class="romaji">CHIWAWA-7SEI</span><a href="https://x.com/chiwawa7th" target="_blank" rel="noopener">@chiwawa7th ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/wdms3_RAn.jpg" data-caption="うぉどむす" aria-label="うぉどむすの写真を拡大"><img src="CastPhotos/wdms3_RAn.jpg" alt="調査員 うぉどむす" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>うぉどむす</h3><span class="romaji">WODOMS</span><a href="https://x.com/wdms_vr2" target="_blank" rel="noopener">@wdms_vr2 ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/flam_RAn.jpg" data-caption="ふらむ" aria-label="ふらむの写真を拡大"><img src="CastPhotos/flam_RAn.jpg" alt="調査員 ふらむ" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>ふらむ</h3><span class="romaji">FLAM</span><a href="https://x.com/Flam_sl" target="_blank" rel="noopener">@Flam_sl ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/rapu_RAn.jpg" data-caption="らぷ" aria-label="らぷの写真を拡大"><img src="CastPhotos/rapu_RAn.jpg" alt="調査員 らぷ" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>らぷ</h3><span class="romaji">RAPU</span><a href="https://x.com/rapu_vrc" target="_blank" rel="noopener">@rapu_vrc ↗</a></div>
+        </article>
+        <article class="cast">
+          <span class="pin" aria-hidden="true"></span>
+          <button class="cast-photo" type="button" data-full="CastPhotos/tara4_RAn.jpg" data-caption="たら" aria-label="たらの写真を拡大"><img src="CastPhotos/tara4_RAn.jpg" alt="調査員 たら" loading="lazy" width="1080" height="1920"></button>
+          <div class="cast-meta"><span class="role">INVESTIGATOR</span><h3>たら</h3><span class="romaji">TARA</span><a href="https://x.com/heibonnnatara" target="_blank" rel="noopener">@heibonnnatara ↗</a></div>
         </article>
       </div>
 
