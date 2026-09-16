@@ -61,7 +61,12 @@
 *,*::before,*::after{box-sizing:border-box}
 /* 文字の基準サイズ。ページ内の rem 指定はすべてこれに追従するので、
    読みにくいときはこの 112.5%（＝18px）を上げ下げすれば全体が一緒に変わる */
-html{font-size:112.5%;scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px)}
+html{
+  font-size:112.5%;scroll-behavior:smooth;scroll-padding-top:calc(var(--topbar-h) + 24px);
+  /* Android Chrome の「フォントブースト」を止める。これが効いていると、長い本文だけが
+     勝手に拡大されて見出しとの大小が崩れ、行が紙からはみ出して見える。 */
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;
+}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
@@ -608,9 +613,20 @@ a.chip-link .arrow{font-size:.9em}
   font-family:var(--font-type);font-size:.68rem;letter-spacing:.06em;color:var(--ink-soft);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-/* 余白が足りない画面幅では出さない */
-@media (max-width:1380px){ .ephoto{display:none} }
-@media (prefers-reduced-motion:reduce){ .ephoto{opacity:1;transform:rotate(var(--rot))} }
+/* 紙の左右に余白が無い画面幅では、写真を「1枚の書類」として書類と書類の間に挟む。
+   JS が写真を <section class="section photo-sheet"> へ移し替えるので、
+   あとは他の書類と同じように積み重なりのアニメーションが効く。 */
+@media (max-width:1380px){
+  .photo-sheet .ephoto{
+    position:relative;top:auto;left:auto;right:auto;
+    width:auto;max-width:var(--max);margin:0 auto;
+    padding:10px 10px 32px;
+    transform:none;                    /* 紙そのものなので傾けない（横にはみ出すため） */
+    box-shadow:0 1px 2px rgba(0,0,0,.55), 0 30px 50px -28px rgba(0,0,0,.85);
+  }
+  .photo-sheet .ephoto figcaption{font-size:.72rem;bottom:9px}
+}
+@media (prefers-reduced-motion:reduce){ .ephoto{transform:rotate(var(--rot))} }
 
 /* ---------- Cast ---------- */
 .cast-grid{
@@ -812,6 +828,8 @@ a.chip-link .arrow{font-size:.9em}
   .spec dl{grid-template-columns:1fr}
 }
 @media (max-width:640px){
+  /* スマホでは基準サイズそのものを下げる（rem 指定は全部これに追従して小さくなる）*/
+  html{font-size:100%}
   body{font-size:.95rem}
   .cast-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cast-meta .role{font-size:.58rem;letter-spacing:.14em}   /* 2列の幅に収める */
@@ -820,6 +838,8 @@ a.chip-link .arrow{font-size:.9em}
   .manga-empty{grid-template-columns:1fr}
   .koma{max-width:280px}
   .timeline li{grid-template-columns:6.4ch 1fr;gap:12px}
+  /* 320px 級の狭い画面で「Fozy_event」などの長い語が列を押し広げないように */
+  .timeline .tl-body{min-width:0;overflow-wrap:anywhere}
   .timeline li::before{left:calc(6.4ch + 12px + 9px)}
   .hero-sheet .stamp{width:96px;height:96px;right:6px;bottom:4px}
   .join .stamp{width:88px;height:88px;right:22px;top:20px}
@@ -1397,13 +1417,44 @@ const MANGA_REPORTS = [
   const links = $$('.nav a[href^="#"]');
   const setActive = id => links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + id));
 
+  /* ---- イベント写真の置き場所 ----
+     PC   … 書類の左右の余白に絶対配置（担当セクションの中に置いたまま）
+     スマホ… 余白が無いので、写真を独立した <section class="section photo-sheet"> に移し、
+             紙と紙の間に挟まる「1枚の書類」として積み重なりに参加させる
+     どちらも同じ <figure> を使い回すので、写真を増やすときに直す場所は1か所のまま。 */
+  const photoMQ = matchMedia('(max-width:1380px)');
+  const photoHome = new Map();
+  $$('.ephoto').forEach(ph => photoHome.set(ph, ph.closest('section')));
+  function arrangePhotos(){
+    let changed = false;
+    photoHome.forEach((home, ph) => {
+      const hosted = ph.parentElement.classList.contains('photo-sheet');
+      if (photoMQ.matches && !hosted){
+        const host = document.createElement('section');
+        host.className = 'section photo-sheet';
+        const cap = ph.querySelector('figcaption');
+        if (cap) host.setAttribute('aria-label', cap.textContent);
+        home.after(host);
+        host.appendChild(ph);
+        changed = true;
+      } else if (!photoMQ.matches && hosted){
+        const host = ph.parentElement;
+        home.insertBefore(ph, home.firstChild);
+        host.remove();
+        changed = true;
+      }
+    });
+    return changed;
+  }
+  arrangePhotos();
+
   /* ---- 書類スタック（スクロールで紙が積み重なる） ----
      ・各書類の止まる位置：短い書類は画面上部（重なるごとに少し下へずらす）、
        画面より長い書類は読み終わった位置＝下端が画面下に来たところで止まる。
      ・--q：下から差し込まれている最中の度合い（1=画面下端で最大の傾き → 0=まっすぐ着地）
      ・--d：上に何枚重なったか（連続値）。CSS 側で縮み・暗さに変換。
      ・スマホでも transform / filter だけを動かすので軽い。 */
-  const sheets = $$('main > section');
+  let sheets = $$('main > section');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const canStack = sheets.length > 1 && !reduceMotion.matches && CSS.supports('position', 'sticky');
 
@@ -1461,7 +1512,8 @@ const MANGA_REPORTS = [
         sec.classList.toggle('is-entering', q > 0.002);
 
 
-        if (activeId === null && r.top <= vh * 0.45 && r.bottom > vh * 0.2) activeId = sec.id; // 一番手前の書類
+        // 一番手前の書類（写真だけの紙はナビの対象外）
+        if (activeId === null && !sec.classList.contains('photo-sheet') && r.top <= vh * 0.45 && r.bottom > vh * 0.2) activeId = sec.id;
       }
       if (activeId !== null) setActive(activeId); // ヒーロー（id なし）なら全部消灯
 
@@ -1478,6 +1530,10 @@ const MANGA_REPORTS = [
 
     const onScroll = () => { if (!ticking){ ticking = true; requestAnimationFrame(update); } };
     window.addEventListener('scroll', onScroll, { passive: true });
+    /* 画面幅がしきい値をまたいだら、写真の置き場所を入れ替えて書類一覧を作り直す */
+    photoMQ.addEventListener('change', () => {
+      if (arrangePhotos()){ sheets = $$('main > section'); requestAnimationFrame(layout); }
+    });
     window.addEventListener('resize', layout);
     window.addEventListener('load', layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
