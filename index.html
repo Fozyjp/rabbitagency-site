@@ -68,6 +68,7 @@ html{font-size:112.5%;scroll-behavior:smooth;scroll-padding-top:calc(var(--topba
 }
 body{
   margin:0;
+  overflow-x:clip;   /* 積み重なる書類の横ずれで横スクロールが出ないように */
   font-family:var(--font-jp);
   font-size:1rem;
   line-height:1.9;
@@ -176,7 +177,7 @@ main > section:nth-of-type(6n) .sheet::before{transform:scale(-1,-1)}
 }
 
 /* タブが紙の上端から 32〜42px はみ出すので、セクション間は最低 52px 空けている */
-.section{margin-top:clamp(52px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
+.section{position:relative;margin-top:clamp(52px,6vw,72px);padding:0 clamp(14px,3vw,32px)}
 .section:last-of-type{margin-bottom:clamp(36px,6vw,72px)}
 .section .sheet{max-width:var(--max);margin:0 auto;padding:var(--sheet-pad)}
 
@@ -190,7 +191,10 @@ main > section:nth-of-type(6n) .sheet::before{transform:scale(-1,-1)}
      下から差し込まれる間 … --q が 1→0。--tilt を強めた角度から、まっすぐへ（読む前に必ず 0 になる）
      読んでいる間         … まっすぐ・明るいまま
      下に潜っていく間     … --d が 0→ 増加。--tilt の角度・横ずれに落ち着き、少し縮んで暗くなる */
-main > section{--d:0;--q:0}
+/* セクションの箱は画面幅いっぱいなので、そのままだと紙の左右の余白でもクリックを奪ってしまう。
+   箱自体はクリックを素通りさせ、中身（紙）だけが受け取るようにして、奥のイベント写真を押せるようにする。 */
+main > section{--d:0;--q:0;pointer-events:none}
+main > section > *{pointer-events:auto}
 .has-stack main > section{position:sticky;top:0;z-index:1;isolation:isolate;transform-origin:50% 0}
 .has-stack main > section.is-under{ /* 上に別の書類が重なっている間だけ変形（スマホの負荷を抑える） */
   transform:
@@ -555,6 +559,59 @@ a.chip-link .arrow{font-size:.9em}
 /* 「急募」スタンプ。紙からはみ出さないよう、余白の内側に収める */
 .join .stamp{right:clamp(16px,3vw,34px);top:clamp(16px,2.6vw,30px);transform:rotate(12deg);width:120px;height:120px}
 
+/* ---------- イベント写真（紙の左右からのぞく） ----------
+   写真は担当セクションの中に置いてあるので、書類と一緒に積み重なっていく。
+   ただし「降ってくる動き」は書類とは別物にしてある：
+     書類 … --q（書類の上端が基準）で 24px ぶんだけ動く
+     写真 … --qp（写真自身の位置が基準）で 150px 動き、横にもズレ、角度も回り、
+            少し大きいところから縮んで落ちてくる（高いところから落ちてきて紙に乗る感じ）
+   基準にする位置も動く量も違うので、紙にくっついて一緒に流れてくる感じが薄れる。
+   写真は紙の途中（--t を % で指定）にも置けて、そこに来たタイミングで落ちてくる。
+   写真は紙より手前（z-index:3）に重ねている。
+
+   増やし方：<section class="section"> の直後に <figure class="ephoto ephoto-l"> を足すだけ（最大5枚を想定）。
+     ephoto-l / ephoto-r … 紙の左／右
+     --t   … セクション上端からの縦位置（px でも % でも可。% は紙の高さに対する割合）
+     --rot … 着地したときの傾き
+     --qr  … 降ってくる間の余分な傾き（左右で符号を変えると自然）
+     --qx  … 降り始めの横方向のズレ（外側へ逃がすと自然） */
+.ephoto{
+  --sheet-w:min(var(--max), 100% - 2 * clamp(14px,3vw,32px));   /* 紙の実際の幅 */
+  --gutter:calc((100% - var(--sheet-w)) / 2);                   /* 紙の外側に残っている余白 */
+  --tuck:34px;      /* 紙に重ねる量 */
+  --rot:-3deg;      /* 着地したときの傾き */
+  --qr:-24deg;      /* 降ってくる間の余分な傾き（着地までにこの角度ぶん回る） */
+  --qx:-70px;       /* 降り始めの横方向のズレ */
+  position:absolute;z-index:3;margin:0;
+  top:var(--t,150px);
+  /* 余白からはみ出さない幅にする：のぞく量＝余白−12px、それに重ねる量を足す */
+  width:clamp(150px, calc(var(--gutter) - 12px + var(--tuck)), 340px);
+  padding:10px 10px 34px;
+  background:var(--paper-light);
+  /* 落ちている間は影が大きく・遠くなる（高いところにある感じ） */
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.4),
+    0 calc(22px + var(--qp,0) * 30px) calc(34px + var(--qp,0) * 36px) -20px rgba(0,0,0,.85);
+  /* 降ってくる動き。書類の --q ではなく、遅れて効く --qp を使う。
+     大きめ・ズレた位置から始まって、降りきると今の位置・大きさに収まる。 */
+  transform:
+    translate(calc(var(--qp,0) * var(--qx)), calc(var(--qp,0) * 150px))
+    rotate(calc(var(--rot) + var(--qp,0) * var(--qr)))
+    scale(calc(1 + var(--qp,0) * .13));
+}
+.ephoto-l{right:calc(50% + var(--sheet-w)/2 - var(--tuck))}
+.ephoto-r{left:calc(50% + var(--sheet-w)/2 - var(--tuck))}
+.ephoto .ephoto-btn{display:block;width:100%;padding:0;border:0;background:#2a1f24;cursor:zoom-in;line-height:0}
+.ephoto img{display:block;width:100%;height:auto}
+.ephoto figcaption{
+  position:absolute;left:10px;right:10px;bottom:8px;text-align:center;
+  font-family:var(--font-type);font-size:.68rem;letter-spacing:.06em;color:var(--ink-soft);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+/* 余白が足りない画面幅では出さない */
+@media (max-width:1380px){ .ephoto{display:none} }
+@media (prefers-reduced-motion:reduce){ .ephoto{opacity:1;transform:rotate(var(--rot))} }
+
 /* ---------- Cast ---------- */
 .cast-grid{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,3vw,30px);
@@ -595,6 +652,62 @@ a.chip-link .arrow{font-size:.9em}
 }
 .cast-meta a:hover{text-decoration:underline;text-underline-offset:3px}
 .cast-foot{margin-top:clamp(24px,4vw,36px);font-size:.92rem;color:var(--ink-soft);text-align:center}
+
+/* ---------- スタッフ紹介（紙の右下のステッカー） ----------
+   ステッカーを押すと、下の紙はそのままの位置・大きさで、その上にカードが落ちてくる。
+   .staff-drop は紙にぴったり重なる透明な層で、閉じている間は visibility:hidden + inert。 */
+.staff-sticker{
+  position:absolute;z-index:6;
+  right:clamp(14px,2.4vw,32px);bottom:clamp(10px,1.8vw,24px);
+  width:clamp(70px,6.6vw,96px);padding:0;border:0;background:none;cursor:pointer;
+  opacity:.92;transform:rotate(-6deg);transform-origin:50% 90%;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.3));
+  transition:transform .35s cubic-bezier(.2,.7,.25,1), filter .35s ease, opacity .3s ease;
+}
+.staff-sticker img{display:block;width:100%;height:auto}
+.staff-sticker:hover,.staff-sticker:focus-visible{
+  opacity:1;transform:rotate(-2deg) translateY(-4px) scale(1.07);
+  filter:drop-shadow(0 11px 15px rgba(0,0,0,.42));
+}
+.staff-sticker[aria-expanded="true"]{opacity:1;transform:rotate(0) scale(1.03)}
+
+.staff-drop{
+  position:absolute;inset:0;z-index:5;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0 clamp(12px,3vw,40px) clamp(74px,8vw,116px);
+  visibility:hidden;pointer-events:none;
+}
+.staff-drop::before{  /* 下の書類を少しだけ落として、落ちてきた紙を見やすくする */
+  content:"";position:absolute;inset:0;background:rgba(26,17,20,.3);
+  opacity:0;transition:opacity .4s ease;
+}
+.staff-drop.is-open{visibility:visible;pointer-events:auto}
+.staff-drop.is-open::before{opacity:1}
+.staff-list{
+  position:relative;list-style:none;margin:0;padding:0;width:min(660px,100%);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.6vw,28px);
+}
+/* 落ちてくる動き。--sr が着地したときの傾き */
+.staff-drop .staff-list > .cast{
+  --sr:0deg;
+  opacity:0;transform:translateY(-110px) rotate(-11deg) scale(1.06);
+  transition:opacity .3s ease, transform .62s cubic-bezier(.18,.86,.3,1.1);
+}
+.staff-drop .staff-list > .cast:nth-child(1){--sr:-1.6deg}
+.staff-drop .staff-list > .cast:nth-child(2){--sr:1.8deg;transition-delay:.12s}
+.staff-drop.is-open .staff-list > .cast{opacity:1;transform:rotate(var(--sr))}
+.staff-drop.is-open .staff-list > .cast:hover,
+.staff-drop.is-open .staff-list > .cast:focus-within{transform:rotate(0) translateY(-6px)}
+.staff-list .staff-photo{aspect-ratio:16/9}   /* スタッフ写真は横長。キャストの 9:16 を上書き */
+#cast .sheet{padding-bottom:calc(var(--sheet-pad) + 34px)}  /* 右下のステッカーのぶん余白を足す */
+@media (max-width:640px){
+  .staff-list{grid-template-columns:1fr;width:min(290px,100%)}
+  .staff-drop{padding-bottom:clamp(64px,14vw,92px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .staff-sticker{transition:none}
+  .staff-drop .staff-list > .cast{transition:none;transform:rotate(var(--sr))}
+}
 
 /* ---------- Manga (ルポマンガ) ---------- */
 .manga-empty{
@@ -786,6 +899,10 @@ a.chip-link .arrow{font-size:.9em}
 
   <!-- ================= ABOUT ================= -->
   <section class="section" id="about" aria-labelledby="about-title">
+    <figure class="ephoto ephoto-l" style="--t:70%;--rot:-4.2deg;--qr:-26deg;--qx:-86px">
+      <button class="ephoto-btn" type="button" data-full="eventphoto/ep01.jpg" data-caption="プレオープン営業" aria-label="プレオープン営業で撮影されたお写真"><img src="eventphoto/ep01.jpg" alt="プレオープン営業で撮影されたお写真" loading="lazy" width="1280" height="720"></button>
+      <figcaption>プレオープン営業</figcaption>
+    </figure>
     <div class="sheet">
       <p class="file-tag"><span class="tag-tab"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></span></p>
       <header class="sec-head">
@@ -930,6 +1047,10 @@ a.chip-link .arrow{font-size:.9em}
 
   <!-- ================= RULES ================= -->
   <section class="section" id="rules" aria-labelledby="rules-title">
+    <figure class="ephoto ephoto-r" style="--t:220px;--rot:3.6deg;--qr:22deg;--qx:86px">
+      <button class="ephoto-btn" type="button" data-full="eventphoto/ep02.jpg" data-caption="第一回営業" aria-label="第一回営業で撮影されたお写真"><img src="eventphoto/ep02.jpg" alt="第一回営業で撮影されたお写真" loading="lazy" width="1280" height="720"></button>
+      <figcaption>第一回営業</figcaption>
+    </figure>
     <div class="sheet">
       <p class="file-tag"><span class="tag-tab"><span class="latin">RULE</span><span class="jp">事務所規則</span></span></p>
       <header class="sec-head">
@@ -1106,6 +1227,25 @@ a.chip-link .arrow{font-size:.9em}
 
       <p class="cast-foot">調査員の指名はできません。出欠に関しては当日のXにて発表いたします。</p>
 
+      <!-- スタッフ紹介：右下のステッカーを押すと、紙の上にカードが落ちてくる -->
+      <button class="staff-sticker" type="button" aria-expanded="false" aria-controls="staff-panel" aria-label="スタッフ紹介">
+        <img src="assets/stkstaff.png" alt="" width="239" height="292">
+      </button>
+      <div class="staff-drop" id="staff-panel" aria-hidden="true" inert>
+        <ul class="staff-list">
+          <li class="cast">
+            <span class="pin" aria-hidden="true"></span>
+            <button class="cast-photo staff-photo" type="button" data-full="CastPhotos/Fozy.jpg" data-caption="Fozy" aria-label="Fozyの写真を拡大"><img src="CastPhotos/Fozy.jpg" alt="所長代理 Fozy" loading="lazy" width="1280" height="720"></button>
+            <div class="cast-meta"><span class="role">DEPUTY DIRECTOR</span><h3>Fozy</h3><span class="romaji">FOZY</span><a href="https://x.com/Fozyjp" target="_blank" rel="noopener">@Fozyjp ↗</a></div>
+          </li>
+          <li class="cast">
+            <span class="pin" aria-hidden="true"></span>
+            <button class="cast-photo staff-photo" type="button" data-full="CastPhotos/Kakulity.jpg" data-caption="かくりてぃ" aria-label="かくりてぃの写真を拡大"><img src="CastPhotos/Kakulity.jpg" alt="スタッフ かくりてぃ" loading="lazy" width="1280" height="720"></button>
+            <div class="cast-meta"><span class="role">STAFF</span><h3>かくりてぃ</h3><span class="romaji">KAKULITY</span><a href="https://x.com/Kakulityvr" target="_blank" rel="noopener">@Kakulityvr ↗</a></div>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
@@ -1213,10 +1353,30 @@ const MANGA_REPORTS = [
     if (e.key === 'ArrowRight' && gallery.length > 1) step(1);
   });
 
-  /* クリックで拡大する画像（キャスト写真・ヒーローのポスター）。data-full を持つ要素が対象 */
+  /* クリックで拡大する画像（キャスト写真・ヒーローのポスター・イベント写真）。data-full を持つ要素が対象 */
   $$('[data-full]').forEach(btn => {
     btn.addEventListener('click', () => open([{ src: btn.dataset.full, title: btn.dataset.caption, alt: btn.dataset.caption }]));
   });
+
+  /* ---- スタッフ紹介：ステッカーを押すと紙の上にカードが落ちてくる ---- */
+  const staffBtn = $('.staff-sticker'), staffDrop = $('#staff-panel');
+  if (staffBtn && staffDrop) {
+    const setStaffOpen = (open) => {
+      staffDrop.classList.toggle('is-open', open);
+      staffBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      staffDrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (open) staffDrop.removeAttribute('inert'); else staffDrop.setAttribute('inert', '');
+    };
+    staffBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      setStaffOpen(!staffDrop.classList.contains('is-open'));
+    });
+    /* カード以外のどこかを押したら閉じる */
+    staffDrop.addEventListener('click', e => { if (!e.target.closest('.cast')) setStaffOpen(false); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && staffDrop.classList.contains('is-open') && lb.hidden) setStaffOpen(false);
+    });
+  }
 
   /* ---- ルポマンガ一覧 ---- */
   const grid = $('#manga-grid'), empty = $('#manga-empty');
@@ -1257,7 +1417,9 @@ const MANGA_REPORTS = [
     const TILT  = [-1.4, 1.1, -0.9, 1.6, -1.2, 0.8, -1.5, 1.3];
     const SHIFT = [-10, 8, -6, 12, -9, 7, -11, 10];
     const VARY  = [0, 3, -2, 4, 1, -1, 2, 0];
-    const ENTER = 0.5;   // 画面下端から「画面高さ×この割合」進む間にまっすぐになる
+    const ENTER = 0.5;        // 書類：画面下端から「画面高さ×この割合」進む間にまっすぐになる
+    const ENTER_PHOTO = 0.72; // 添えてある写真：自分が画面に入ってから、この割合ぶん進む間に着地する
+    const ephotos = $$('.ephoto');
 
     function layout(){
       const vh = window.innerHeight, small = window.innerWidth < 640;
@@ -1298,9 +1460,20 @@ const MANGA_REPORTS = [
         sec.style.setProperty('--q', q.toFixed(3));
         sec.classList.toggle('is-entering', q > 0.002);
 
+
         if (activeId === null && r.top <= vh * 0.45 && r.bottom > vh * 0.2) activeId = sec.id; // 一番手前の書類
       }
       if (activeId !== null) setActive(activeId); // ヒーロー（id なし）なら全部消灯
+
+      /* 添えてあるイベント写真は、書類とは別に「その写真自身が画面に入った度合い」で降らせる。
+         書類の --q は書類の上端が基準なので、長い書類では写真が画面に来る前に終わってしまう。
+         写真の位置は offsetTop（変形の影響を受けない値）で取るので、自分の transform に
+         引きずられてブレることもない。--qp: 1 = まだ高いところ / 0 = 着地。 */
+      ephotos.forEach(ph => {
+        const y = ph.parentElement.getBoundingClientRect().top + ph.offsetTop;
+        const e2 = Math.min(1, Math.max(0, (vh - y) / (vh * ENTER_PHOTO)));
+        ph.style.setProperty('--qp', (1 - e2 * e2 * (3 - 2 * e2)).toFixed(3));
+      });
     }
 
     const onScroll = () => { if (!ticking){ ticking = true; requestAnimationFrame(update); } };
