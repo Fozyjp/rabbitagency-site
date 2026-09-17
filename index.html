@@ -298,10 +298,11 @@ main > section > *{pointer-events:auto}
 }
 .hero-sheet{padding:var(--sheet-pad)}
 .hero-sheet .pin{top:-34px;left:50%;margin-left:-23px;transform:rotate(-3deg)}
-.hero-ribbon{
-  display:inline-block;font-size:.9rem;letter-spacing:.24em;color:var(--paper-light);
-  background:var(--plum);padding:6px 18px;border-radius:1px;
-  box-shadow:0 2px 0 var(--wine-deep);
+/* キャッチコピーは画像（文言は img の alt に残してある）。背景の塗りは無し */
+.hero-ribbon{display:block;margin:0;width:100%}   /* 紙の幅いっぱい */
+.hero-ribbon img{
+  display:block;width:100%;height:auto;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.5));
 }
 .hero-logo{margin:18px 0 8px;width:min(100%,520px)}
 .hero-logo img{width:100%;height:auto;filter:drop-shadow(0 2px 0 rgba(255,255,255,.55))}
@@ -590,11 +591,23 @@ a.chip-link .arrow{font-size:.9em}
   position:absolute;z-index:3;margin:0;
   top:var(--t,150px);
   /* 余白からはみ出さない幅にする：のぞく量＝余白−12px、それに重ねる量を足す */
-  width:clamp(150px, calc(var(--gutter) - 12px + var(--tuck)), 340px);
-  padding:10px 10px 34px;
-  background:var(--paper-light);
-  /* 落ちている間は影が大きく・遠くなる（高いところにある感じ） */
+  --pw:clamp(150px, calc(var(--gutter) - 12px + var(--tuck)), 340px);   /* 写真の幅 */
+  width:var(--pw);
+  /* ポラロイドの枠。--pw から計算しているので、写真が大きくなっても枠の太さの比は変わらない。
+     左右と上は幅の 4.5%、下は 39.3%。写真は 16:9 のまま切り出さずに貼っているので、
+     上 .045 + 写真 .91×9/16 + 下 .393 ＝ 幅の約 0.95 倍、つまり紙全体がほぼ正方形になる。
+     ※ padding を % で書くと「親要素の幅」基準になってしまうので、必ず --pw を使うこと。 */
+  padding:calc(var(--pw) * .045) calc(var(--pw) * .045) calc(var(--pw) * .393);
+  /* 台紙。まん中は白、ふちに向かってごくわずかに黄ばませている */
+  background:radial-gradient(130% 120% at 50% 40%, #fdfdfb 42%, #f4efe2 100%);
+  border-radius:2px;            /* 断裁の角。ほんの少しだけ */
+  container-type:inline-size;   /* キャプションを写真の幅に追従させるため */
+  /* 内側3本＝カードの厚み（上のハイライト・下の影・断裁のふち）。
+     外側2本＝机に落ちる影。落ちている間は影が大きく・遠くなる（高いところにある感じ） */
   box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(90,70,50,.16),
+    inset 0 0 0 1px rgba(60,45,30,.07),
     0 2px 5px rgba(0,0,0,.4),
     0 calc(22px + var(--qp,0) * 30px) calc(34px + var(--qp,0) * 36px) -20px rgba(0,0,0,.85);
   /* 降ってくる動き。書類の --q ではなく、遅れて効く --qp を使う。
@@ -606,25 +619,56 @@ a.chip-link .arrow{font-size:.9em}
 }
 .ephoto-l{right:calc(50% + var(--sheet-w)/2 - var(--tuck))}
 .ephoto-r{left:calc(50% + var(--sheet-w)/2 - var(--tuck))}
-.ephoto .ephoto-btn{display:block;width:100%;padding:0;border:0;background:#2a1f24;cursor:zoom-in;line-height:0}
-.ephoto img{display:block;width:100%;height:auto}
-.ephoto figcaption{
-  position:absolute;left:10px;right:10px;bottom:8px;text-align:center;
-  font-family:var(--font-type);font-size:.68rem;letter-spacing:.06em;color:var(--ink-soft);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+/* 台紙の粒子。カード全体に薄くかけて「印刷物を撮った」質感にする */
+.ephoto::before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.30'/></svg>");
 }
+/* 写真は切り出さず、元の比率のまま貼る（高さは画像まかせ） */
+.ephoto .ephoto-btn{
+  position:relative;display:block;width:100%;padding:0;border:0;border-radius:1px;
+  background:#2a1f24;cursor:zoom-in;line-height:0;overflow:hidden;
+}
+/* フィルム面。四隅の落ち込み、わずかな色かぶり、窓が一段くぼんで見える影 */
+.ephoto .ephoto-btn::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(118% 108% at 50% 48%, transparent 52%, rgba(20,10,20,.30) 100%),
+    linear-gradient(160deg, rgba(255,214,170,.10), transparent 46%, rgba(120,190,220,.10));
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.28), inset 0 2px 5px rgba(0,0,0,.30);
+}
+/* コントラストと彩度を落として黒を浮かせる＝インスタントフィルムの出方 */
+.ephoto img{display:block;width:100%;height:auto;filter:contrast(.9) saturate(.86) brightness(1.06)}
+/* 下の余白のまん中にペン書き風の文字。少しだけ傾けて手書きらしくしている */
+.ephoto figcaption{
+  /* 下の白枠のまん中に置く。高さは cqw（写真自身の幅に対する割合）なので、
+     写真が大きくなっても小さくなっても見た目の比率が変わらない。
+     ※ % を使うと親要素基準になってしまうのでここでは使わないこと。 */
+  position:absolute;left:0;right:0;bottom:0;height:43.2cqw;
+  display:grid;place-items:center;padding-inline:3cqw;
+  overflow:hidden;
+  transform:rotate(-2.6deg);   /* 手書きらしく少しだけ傾ける */
+}
+/* 手書き文字は画像（assets/cap-*.png）。透過PNGで、文字色はあらかじめインク色に
+   焼き込んである。文言は alt に持たせてあるので読み上げ・検索にも残る。
+   キャプションを増やすときは同じ作りの透過PNGを assets/ に置くだけ。 */
+.ephoto .cap-ink{display:block;width:auto;height:auto;max-width:88%;max-height:78%}
 /* 紙の左右に余白が無い画面幅では、写真を「1枚の書類」として書類と書類の間に挟む。
    JS が写真を <section class="section photo-sheet"> へ移し替えるので、
    あとは他の書類と同じように積み重なりのアニメーションが効く。 */
 @media (max-width:1380px){
   .photo-sheet .ephoto{
     position:relative;top:auto;left:auto;right:auto;
-    width:auto;max-width:var(--max);margin:0 auto;
-    padding:10px 10px 32px;
+    --pw:min(100%, 560px);          /* 大きすぎるポラロイドにならないよう上限 */
+    width:var(--pw);max-width:none;margin:0 auto;
     transform:none;                    /* 紙そのものなので傾けない（横にはみ出すため） */
-    box-shadow:0 1px 2px rgba(0,0,0,.55), 0 30px 50px -28px rgba(0,0,0,.85);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      inset 0 -1px 0 rgba(90,70,50,.16),
+      inset 0 0 0 1px rgba(60,45,30,.07),
+      0 1px 2px rgba(0,0,0,.55), 0 30px 50px -28px rgba(0,0,0,.85);
   }
-  .photo-sheet .ephoto figcaption{font-size:.72rem;bottom:9px}
 }
 @media (prefers-reduced-motion:reduce){ .ephoto{transform:rotate(var(--rot))} }
 
@@ -876,7 +920,7 @@ a.chip-link .arrow{font-size:.9em}
     <div class="hero-grid">
       <div class="sheet hero-sheet">
         <span class="pin" aria-hidden="true"></span>
-        <p class="hero-ribbon">こまどアバター お写真デートRPイベント</p>
+        <p class="hero-ribbon"><img src="assets/komadete.png" alt="こまどアバター お写真デートRPイベント" width="937" height="75"></p>
         <div class="hero-logo"><img src="RabbitAgencyLogo.png" alt="Exploration And Capture RabbitAgency" width="893" height="495"></div>
         <h1 class="hero-title" id="hero-title">探偵助手、募集中。</h1>
         <p class="hero-sub">調査員（キャスト）とふたり、恋人のフリをして<br>ワールドを調査し、写真を撮ってくること。</p>
@@ -921,7 +965,7 @@ a.chip-link .arrow{font-size:.9em}
   <section class="section" id="about" aria-labelledby="about-title">
     <figure class="ephoto ephoto-l" style="--t:70%;--rot:-4.2deg;--qr:-26deg;--qx:-86px">
       <button class="ephoto-btn" type="button" data-full="eventphoto/ep01.jpg" data-caption="プレオープン営業" aria-label="プレオープン営業で撮影されたお写真"><img src="eventphoto/ep01.jpg" alt="プレオープン営業で撮影されたお写真" loading="lazy" width="1280" height="720"></button>
-      <figcaption>プレオープン営業</figcaption>
+      <figcaption><img class="cap-ink" src="assets/cap-preopen.png" alt="プレオープン営業" width="499" height="96"></figcaption>
     </figure>
     <div class="sheet">
       <p class="file-tag"><span class="tag-tab"><span class="latin">CASE FILE</span><span class="jp">依頼書</span></span></p>
@@ -1069,7 +1113,7 @@ a.chip-link .arrow{font-size:.9em}
   <section class="section" id="rules" aria-labelledby="rules-title">
     <figure class="ephoto ephoto-r" style="--t:220px;--rot:3.6deg;--qr:22deg;--qx:86px">
       <button class="ephoto-btn" type="button" data-full="eventphoto/ep02.jpg" data-caption="第一回営業" aria-label="第一回営業で撮影されたお写真"><img src="eventphoto/ep02.jpg" alt="第一回営業で撮影されたお写真" loading="lazy" width="1280" height="720"></button>
-      <figcaption>第一回営業</figcaption>
+      <figcaption><img class="cap-ink" src="assets/cap-dai1kai.png" alt="第一回営業" width="499" height="96"></figcaption>
     </figure>
     <div class="sheet">
       <p class="file-tag"><span class="tag-tab"><span class="latin">RULE</span><span class="jp">事務所規則</span></span></p>
