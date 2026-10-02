@@ -722,7 +722,7 @@ a.chip-link .arrow{font-size:.9em}
   --pw:clamp(140px, 36%, 200px);   /* 写真の幅（説明欄の幅の36%、140〜200px） */
   position:relative;float:right;width:var(--pw);
   margin:10px 0 12px 20px;
-  padding:calc(var(--pw) * .045) calc(var(--pw) * .045) calc(var(--pw) * .15);
+  padding:calc(var(--pw) * .045) calc(var(--pw) * .045) calc(var(--pw) * .06);
   background:radial-gradient(130% 120% at 50% 40%, #fdfdfb 42%, #f4efe2 100%);
   border-radius:2px;
   box-shadow:
@@ -733,6 +733,13 @@ a.chip-link .arrow{font-size:.9em}
   transform:rotate(var(--rot,-2deg));
 }
 .tl-photo .pin{top:-18px;left:50%;margin-left:-14px;width:28px;height:44px;transform:rotate(var(--tape,4deg))}
+/* 写真の下の白い余白に書き込んだひとこと */
+.tl-photo figcaption{
+  margin-top:calc(var(--pw) * .055);padding:0 2px;
+  font-size:.74rem;line-height:1.65;letter-spacing:.02em;text-align:center;color:#3b2f2a;
+  font-weight:600;
+  word-break:keep-all;overflow-wrap:anywhere;   /* 単語の途中で改行しない（<wbr> の位置で折り返す） */
+}
 .timeline .tl-body{display:flow-root}   /* 回り込んだ写真を行の中に収める（次の行に食い込まない） */
 @media (max-width:640px){
   .timeline .tl-body{display:flex;flex-direction:column}
@@ -1088,7 +1095,7 @@ a.chip-link .arrow{font-size:.9em}
         <ol class="timeline">
           <li>
             <time datetime="22:50">22:50</time>
-            <div class="tl-body"><h3>事前当選者リクイン</h3><figure class="tl-photo" style="--rot:-2.4deg;--tape:5deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-start.jpg" data-caption="受付" aria-label="受付の写真を拡大"><img src="eventphoto/flow-start.jpg" alt="事務所の受付カウンターに立つキャスト" loading="lazy" width="1280" height="720"></button></figure><p>事前抽選に当選した方は、この時間にリクインをお送りください。</p></div>
+            <div class="tl-body"><h3>事前当選者リクイン</h3><figure class="tl-photo" style="--rot:-2.4deg;--tape:5deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-start.jpg" data-caption="受付" aria-label="受付の写真を拡大"><img src="eventphoto/flow-start.jpg" alt="事務所の受付カウンターに立つキャスト" loading="lazy" width="1280" height="720"></button><figcaption>所長代理と<wbr>ランダムな<wbr>キャストが<wbr>お出迎え。</figcaption></figure><p>事前抽選に当選した方は、この時間にリクインをお送りください。</p></div>
           </li>
           <li>
             <time datetime="22:55">22:55</time>
@@ -1096,7 +1103,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="23:00">23:00</time>
-            <div class="tl-body"><h3>ブリーフィング <span class="dur">約10分</span></h3><figure class="tl-photo" style="--rot:2deg;--tape:-4deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-briefing.jpg" data-caption="ブリーフィング" aria-label="ブリーフィングの写真を拡大"><img src="eventphoto/flow-briefing.jpg" alt="ブリーフィングの様子" loading="lazy" width="1280" height="720"></button></figure><p>お客様が集まり次第説明会を行います。イベントの注意事項、その日のワールドと探索目標（お題）の地点を発表します。</p></div>
+            <div class="tl-body"><h3>ブリーフィング <span class="dur">約10分</span></h3><figure class="tl-photo" style="--rot:2deg;--tape:-4deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-briefing.jpg" data-caption="ブリーフィング" aria-label="ブリーフィングの写真を拡大"><img src="eventphoto/flow-briefing.jpg" alt="ブリーフィングの様子" loading="lazy" width="1280" height="720"></button><figcaption>ブリーフィングの<wbr>内容は<wbr>毎回<wbr>異なります！</figcaption></figure><p>お客様が集まり次第説明会を行います。イベントの注意事項、その日のワールドと探索目標（お題）の地点を発表します。</p></div>
           </li>
           <li class="is-main">
             <time datetime="23:10">23:10</time>
@@ -1104,7 +1111,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="23:55">23:55</time>
-            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約20分</span></h3><figure class="tl-photo" style="--rot:-1.6deg;--tape:3deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-after.jpg" data-caption="アフター" aria-label="アフターの写真を拡大"><img src="eventphoto/flow-after.jpg" alt="提出された写真が並ぶ事務所でのアフター" loading="lazy" width="1280" height="720"></button></figure><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で20分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
+            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約20分</span></h3><figure class="tl-photo" style="--rot:-1.6deg;--tape:3deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-after.jpg" data-caption="アフター" aria-label="アフターの写真を拡大"><img src="eventphoto/flow-after.jpg" alt="提出された写真が並ぶ事務所でのアフター" loading="lazy" width="1280" height="720"></button><figcaption>アフターには<wbr>オマケ要素も・・・？</figcaption></figure><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で20分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
           </li>
           <li>
             <time datetime="00:20">24:20</time>
