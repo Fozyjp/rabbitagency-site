@@ -478,7 +478,7 @@ a.chip-link .arrow{font-size:.9em}
   width:30px;height:30px;left:-5px;top:0;
 }
 .timeline h3{font-size:1.12rem;color:var(--plum);letter-spacing:.05em}
-.timeline .dur{font-family:var(--font-type);font-size:.8rem;color:var(--ink-soft);margin-left:8px;letter-spacing:.02em}
+.timeline .dur{font-family:var(--font-type);font-size:.8rem;color:var(--ink-soft);margin-left:8px;letter-spacing:.02em;white-space:nowrap}
 .timeline p{margin-top:4px;font-size:.96rem;color:var(--ink-soft)}
 .timeline li.is-main p{color:var(--ink)}
 
@@ -620,18 +620,18 @@ a.chip-link .arrow{font-size:.9em}
 .ephoto-l{right:calc(50% + var(--sheet-w)/2 - var(--tuck))}
 .ephoto-r{left:calc(50% + var(--sheet-w)/2 - var(--tuck))}
 /* 台紙の粒子。カード全体に薄くかけて「印刷物を撮った」質感にする */
-.ephoto::before{
+:is(.ephoto,.tl-photo)::before{
   content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
   opacity:.5;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='0.30'/></svg>");
 }
 /* 写真は切り出さず、元の比率のまま貼る（高さは画像まかせ） */
-.ephoto .ephoto-btn{
+:is(.ephoto,.tl-photo) .ephoto-btn{
   position:relative;display:block;width:100%;padding:0;border:0;border-radius:1px;
   background:#2a1f24;cursor:zoom-in;line-height:0;overflow:hidden;
 }
 /* フィルム面。四隅の落ち込み、わずかな色かぶり、窓が一段くぼんで見える影 */
-.ephoto .ephoto-btn::after{
+:is(.ephoto,.tl-photo) .ephoto-btn::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:
     radial-gradient(118% 108% at 50% 48%, transparent 52%, rgba(20,10,20,.30) 100%),
@@ -639,7 +639,7 @@ a.chip-link .arrow{font-size:.9em}
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.28), inset 0 2px 5px rgba(0,0,0,.30);
 }
 /* コントラストと彩度を落として黒を浮かせる＝インスタントフィルムの出方 */
-.ephoto img{display:block;width:100%;height:auto;filter:contrast(.9) saturate(.86) brightness(1.06)}
+:is(.ephoto,.tl-photo) .ephoto-btn img{display:block;width:100%;height:auto;filter:contrast(.9) saturate(.86) brightness(1.06)}
 /* 下の余白のまん中にペン書き風の文字。少しだけ傾けて手書きらしくしている */
 .ephoto figcaption{
   /* 下の白枠のまん中に置く。高さは cqw（写真自身の幅に対する割合）なので、
@@ -712,6 +712,32 @@ a.chip-link .arrow{font-size:.9em}
 }
 .cast-meta a:hover{text-decoration:underline;text-underline-offset:3px}
 .cast-foot{margin-top:clamp(24px,4vw,36px);font-size:.92rem;color:var(--ink-soft);text-align:center}
+
+/* ---------- イベントの流れに貼った写真（各時刻の説明の右側） ----------
+   質感は上のイベント写真（.ephoto）と共通。こちらは紙にテープで貼ってあるだけなので、
+   落ちてくる動きは無し。説明文の右に回り込ませて置き、スマホでは説明の下に並べる。
+   増やし方：<div class="tl-body"> の先頭に <figure class="tl-photo"> を入れるだけ。
+     --rot  … 貼ったときの傾き / --tape … テープの傾き */
+.tl-photo{
+  --pw:clamp(140px, 36%, 200px);   /* 写真の幅（説明欄の幅の36%、140〜200px） */
+  position:relative;float:right;width:var(--pw);
+  margin:10px 0 12px 20px;
+  padding:calc(var(--pw) * .045) calc(var(--pw) * .045) calc(var(--pw) * .15);
+  background:radial-gradient(130% 120% at 50% 40%, #fdfdfb 42%, #f4efe2 100%);
+  border-radius:2px;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 rgba(90,70,50,.16),
+    inset 0 0 0 1px rgba(60,45,30,.07),
+    0 1px 3px rgba(0,0,0,.35), 0 14px 22px -14px rgba(0,0,0,.75);
+  transform:rotate(var(--rot,-2deg));
+}
+.tl-photo .pin{top:-18px;left:50%;margin-left:-14px;width:28px;height:44px;transform:rotate(var(--tape,4deg))}
+.timeline .tl-body{display:flow-root}   /* 回り込んだ写真を行の中に収める（次の行に食い込まない） */
+@media (max-width:640px){
+  .timeline .tl-body{display:flex;flex-direction:column}
+  .tl-photo{order:9;float:none;--pw:min(100%,240px);margin:16px 0 6px 2px}
+}
 
 /* ---------- スタッフ紹介（紙の右下のステッカー） ----------
    ステッカーを押すと、下の紙はそのままの位置・大きさで、その上にカードが落ちてくる。
@@ -1062,7 +1088,7 @@ a.chip-link .arrow{font-size:.9em}
         <ol class="timeline">
           <li>
             <time datetime="22:50">22:50</time>
-            <div class="tl-body"><h3>事前当選者リクイン</h3><p>事前抽選に当選した方は、この時間にリクインをお送りください。</p></div>
+            <div class="tl-body"><h3>事前当選者リクイン</h3><figure class="tl-photo" style="--rot:-2.4deg;--tape:5deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-start.jpg" data-caption="受付" aria-label="受付の写真を拡大"><img src="eventphoto/flow-start.jpg" alt="事務所の受付カウンターに立つキャスト" loading="lazy" width="1280" height="720"></button></figure><p>事前抽選に当選した方は、この時間にリクインをお送りください。</p></div>
           </li>
           <li>
             <time datetime="22:55">22:55</time>
@@ -1070,7 +1096,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="23:00">23:00</time>
-            <div class="tl-body"><h3>ブリーフィング <span class="dur">約10分</span></h3><p>お客様が集まり次第説明会を行います。イベントの注意事項、その日のワールドと探索目標（お題）の地点を発表します。</p></div>
+            <div class="tl-body"><h3>ブリーフィング <span class="dur">約10分</span></h3><figure class="tl-photo" style="--rot:2deg;--tape:-4deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-briefing.jpg" data-caption="ブリーフィング" aria-label="ブリーフィングの写真を拡大"><img src="eventphoto/flow-briefing.jpg" alt="ブリーフィングの様子" loading="lazy" width="1280" height="720"></button></figure><p>お客様が集まり次第説明会を行います。イベントの注意事項、その日のワールドと探索目標（お題）の地点を発表します。</p></div>
           </li>
           <li class="is-main">
             <time datetime="23:10">23:10</time>
@@ -1078,7 +1104,7 @@ a.chip-link .arrow{font-size:.9em}
           </li>
           <li>
             <time datetime="23:55">23:55</time>
-            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約20分</span></h3><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で20分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
+            <div class="tl-body"><h3>事務所へ帰還・アフター <span class="dur">約20分</span></h3><figure class="tl-photo" style="--rot:-1.6deg;--tape:3deg"><span class="pin" aria-hidden="true"></span><button class="ephoto-btn" type="button" data-full="eventphoto/flow-after.jpg" data-caption="アフター" aria-label="アフターの写真を拡大"><img src="eventphoto/flow-after.jpg" alt="提出された写真が並ぶ事務所でのアフター" loading="lazy" width="1280" height="720"></button></figure><p>インスタンスリーダーからキャストとお客様にインバイトが届きます。事務所に戻って写真を提出したら、事務所で20分程アフターの時間を取っております。キャスト、お客様共にアフターの参加は自由ですので、他のキャストとお話しできるかは運次第ですが、もしよろしければイベントの感想等もお聞かせください。</p></div>
           </li>
           <li>
             <time datetime="00:20">24:20</time>
@@ -1163,6 +1189,10 @@ a.chip-link .arrow{font-size:.9em}
 
   <!-- ================= JOIN ================= -->
   <section class="section join" id="join" aria-labelledby="join-title">
+    <figure class="ephoto ephoto-r" style="--t:66%;--rot:-3.2deg;--qr:-22deg;--qx:86px">
+      <button class="ephoto-btn" type="button" data-full="eventphoto/ep03.jpg" data-caption="第二回営業" aria-label="第二回営業で撮影されたお写真"><img src="eventphoto/ep03.jpg" alt="第二回営業で撮影されたお写真" loading="lazy" width="1280" height="720"></button>
+      <figcaption><img class="cap-ink" src="assets/cap-dai2kai.png" alt="第二回営業" width="499" height="96"></figcaption>
+    </figure>
     <div class="sheet">
       <p class="file-tag"><span class="tag-tab"><span class="latin">HOW TO JOIN</span><span class="jp">助手応募要項</span></span></p>
       <svg class="stamp" viewBox="0 0 140 140" aria-hidden="true">
@@ -1513,7 +1543,6 @@ const MANGA_REPORTS = [
     const SHIFT = [-10, 8, -6, 12, -9, 7, -11, 10];
     const VARY  = [0, 3, -2, 4, 1, -1, 2, 0];
     const ENTER = 0.5;        // 書類：画面下端から「画面高さ×この割合」進む間にまっすぐになる
-    const ENTER_PHOTO = 0.72; // 添えてある写真：自分が画面に入ってから、この割合ぶん進む間に着地する
     const ephotos = $$('.ephoto');
 
     function layout(){
@@ -1566,8 +1595,10 @@ const MANGA_REPORTS = [
          写真の位置は offsetTop（変形の影響を受けない値）で取るので、自分の transform に
          引きずられてブレることもない。--qp: 1 = まだ高いところ / 0 = 着地。 */
       ephotos.forEach(ph => {
+        // 写真の全体が画面に入りきった（下端が画面下から 48px 上に来た）ところで着地させる。
+        // 紙の下の方に貼った写真でも、紙が貼り付いたまま「落ちかけ」で止まらないようにするため。
         const y = ph.parentElement.getBoundingClientRect().top + ph.offsetTop;
-        const e2 = Math.min(1, Math.max(0, (vh - y) / (vh * ENTER_PHOTO)));
+        const e2 = Math.min(1, Math.max(0, (vh - y) / (ph.offsetHeight + 48)));
         ph.style.setProperty('--qp', (1 - e2 * e2 * (3 - 2 * e2)).toFixed(3));
       });
     }
